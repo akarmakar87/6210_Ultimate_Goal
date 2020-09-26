@@ -419,13 +419,13 @@ public class SkystoneLinearOpMode extends LinearOpMode {
         telemetry.update();
     }
 
-    public void initTensorFlow(){
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+    /*public void initTensorFlow(){
+        if (ClassFactory.getInstance().createTFObjectDetector()) {
             initTfod();
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
-    }
+    }*/
 
     public void initTfod() {
         //CREATION OF TFOD MONITOR VIEW IN ADDITION TO VUFORIA CAMERA MONITOR VIEW IS PROBABLY CAUSING TWO VIEWS
@@ -433,7 +433,7 @@ public class SkystoneLinearOpMode extends LinearOpMode {
        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minimumConfidence = 0.8;
+       //tfodParameters.minimumConfidence = 0.8;
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE, LABEL_SKYSTONE);
    }
