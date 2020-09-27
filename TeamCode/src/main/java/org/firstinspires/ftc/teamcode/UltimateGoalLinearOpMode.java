@@ -141,6 +141,23 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
     //GRAB & RELEASE WOBBLE
 
+    //******************************************************************************//
+
+    // AUTONOMOUS METHODS:
+
+    // ONE METHOD FOR MOVING BACK AND FORTH BETWEEN DROP ZONES AND LAUNCH LINE (PARAMS: WHICH BOX TO GO TO, WHICH LINE START AT)
+
+    // ONE METHOD TO DETECT THE NUMBER RINGS STACKED IN AUTO (PARAMS: BITMAP OBJECT)
+
+    // ONE METHOD TO DO POWERSHOTS IN AUTO (PARAMS: BOX)
+
+    // ONE METHOD WITH COLOR SENSOR TO LINE UP WITH LAUNCH LINE
+
+    // ONE METHOD TO SET ___
+
+    //
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {}
