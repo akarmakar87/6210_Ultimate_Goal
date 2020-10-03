@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group = "teleop") // BLUE SIDE
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group = "teleop")
 
 public class MainTeleOp extends SkystoneLinearOpMode {
 
@@ -15,7 +15,6 @@ public class MainTeleOp extends SkystoneLinearOpMode {
         init(hardwareMap, false);
 
         //Declares all instance variables
-
         waitForStart();
 
         //Movement Method:
