@@ -19,6 +19,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     public DcMotor RF;
     public DcMotor LB;
     public DcMotor RB;
+    public DcMotor intake;
+    public DcMotor shooter;
 
     //SENSORS
     public BNO055IMU imu;
@@ -45,17 +47,23 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         RF          = map.dcMotor.get("RF");
         LB          = map.dcMotor.get("LB");
         RB          = map.dcMotor.get("RB");
+        intake      = map.dcMotor.get("intake");
+        shooter     = map.dcMotor.get("shooter");
         imu         = map.get(BNO055IMU.class, "imu"); // Check which IMU is being used
 
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
         RF.setDirection(DcMotorSimple.Direction.FORWARD);//r
         RB.setDirection(DcMotorSimple.Direction.FORWARD);//r
         LB.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
         LF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //SET UP GYRO
         angles = new Orientation();
