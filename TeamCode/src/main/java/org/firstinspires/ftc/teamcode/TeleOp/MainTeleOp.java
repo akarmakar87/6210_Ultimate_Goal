@@ -78,10 +78,10 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Intake
 
             if(gamepad1.right_bumper){
-                intake.setPower(1);
+                intake.setPower(0.5);
             }
             else if(gamepad1.left_bumper){
-                intake.setPower(-1);
+                intake.setPower(-0.5);
             }
             else{
                 intake.setPower(0);
@@ -90,22 +90,33 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Output
 
             if(gamepad1.right_trigger > 0.05){
-                intake.setPower(gamepad1.right_trigger);
+                shooter.setPower(gamepad1.right_trigger);
             }
             else if(gamepad1.left_trigger > 0.05){
-                intake.setPower(-gamepad1.left_trigger);
+                shooter.setPower(-gamepad1.left_trigger);
             }
             else{
-                intake.setPower(0);
+                shooter.setPower(0);
             }
 
             if(gamepad1.dpad_up){
                 shooterPower = Range.clip(shooterPower+.05, -1,1);
-                intake.setPower(shooterPower);
+                shooter.setPower(shooterPower);
             }
             if(gamepad1.dpad_down){
                 shooterPower = Range.clip(shooterPower-.05, -1,1);
-                intake.setPower(shooterPower);
+                shooter.setPower(shooterPower);
+            }
+
+            //Loader
+
+            //Deployed
+            if(gamepad1.a){
+                loader.setPosition(0);
+            }
+            //Retracted
+            if(gamepad1.b){
+                loader.setPosition(1);
             }
 
             // Arm

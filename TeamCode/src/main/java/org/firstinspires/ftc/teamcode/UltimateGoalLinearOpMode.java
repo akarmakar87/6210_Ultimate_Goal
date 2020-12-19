@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -21,6 +22,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     public DcMotor RB;
     public DcMotor intake;
     public DcMotor shooter;
+    public Servo loader;
 
     //SENSORS
     public BNO055IMU imu;
@@ -49,12 +51,13 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         RB          = map.dcMotor.get("RB");
         intake      = map.dcMotor.get("intake");
         shooter     = map.dcMotor.get("shooter");
+        loader      = map.servo.get("loader");
         imu         = map.get(BNO055IMU.class, "imu"); // Check which IMU is being used
 
-        LF.setDirection(DcMotorSimple.Direction.REVERSE);
+        LF.setDirection(DcMotorSimple.Direction.FORWARD);
         RF.setDirection(DcMotorSimple.Direction.FORWARD);//r
         RB.setDirection(DcMotorSimple.Direction.FORWARD);//r
-        LB.setDirection(DcMotorSimple.Direction.REVERSE);
+        LB.setDirection(DcMotorSimple.Direction.FORWARD);
         shooter.setDirection(DcMotorSimple.Direction.FORWARD);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
