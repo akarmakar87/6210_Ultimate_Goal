@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Bitmap;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,9 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.Arrays;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
-import static org.firstinspires.ftc.teamcode.SkystoneLinearOpMode.CAMERA_CHOICE;
-import static org.firstinspires.ftc.teamcode.SkystoneLinearOpMode.PHONE_IS_PORTRAIT;
+import static android.graphics.Color.red;
 
 public class UltimateGoalLinearOpMode extends LinearOpMode {
 
@@ -53,16 +53,13 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     public double encoderToInches = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/(WHEEL_DIAMETER_INCHES * Math.PI);
     public double strafeEncoderToInches = 60;
 
+    // VUFORIA VARIABLES
     public static final String VUFORIA_KEY = "AQt2xVL/////AAABmXIVKUnTcEJbqvVBjp/Sw/9SqarohYyKotzRjT/Xl1/S8KDwsFHv/zYw6rXqXTjKrnjk92GfBA4hbZaQP17d1N6BiBuXO2W/hFNoMGxiF+fWlnvtDmUM1H/MF9faMOjZcPNjnQ7X8DVwdDDha3A3aqaoegefkKxb4A5EjP8Xcb0EPJ1JA4RwhUOutLbCDJNKUq6nCi+cvPqShvlYTvXoROcOGWSIrPxMEiOHemCyuny7tJHUyEg2FTd2upiQygKAeD+LN3P3cT02aK6AJbQ0DlQccxAtoo1+b//H6/eGro2s0fjxA2dH3AaoHB7qkb2K0Vl7ReFEwX7wmqJleamNUG+OZu7K3Zm68mPudzNuhAWQ";
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
     private VuforiaLocalizer vuforia;
 
-    // ADDED FROM SKYSTONE
     private VuforiaLocalizer.CloseableFrame frame; //takes the frame at the head of the queue
     private Image rgb;
+    private Image greyscale;
 
     // INITIALIZE
     public void init(HardwareMap map, boolean auto){
@@ -131,29 +128,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         telemetry.update();
     }
 
-    //INIT VUFORIA
-    public void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // --- ADDED IN BITMAP CODE IN ADDITION TO TEMPLATE INIT CODE --
-        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
-        vuforia.setFrameQueueCapacity(1); //tells VuforiaLocalizer to only store one frame at a time
-
-        /*
-        telemetry.addData("Vuforia:", "initialized");
-        telemetry.update();
-         */
-    }
-
+    // INIT BITMAP VUFORIA
     public void initBitmapVuforia(){
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -168,6 +143,102 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         telemetry.addData("Vuforia:", "initialized");
         telemetry.update();
+    }
+
+    // GET BITMAP
+    public Bitmap getBitmap() throws InterruptedException {
+        Bitmap bm = null;
+
+        if(opModeIsActive()&& !isStopRequested()){
+            frame = vuforia.getFrameQueue().take();
+            long num = frame.getNumImages();
+
+            for(int i = 0; i < num; i++){
+                if(frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565){
+                    rgb = frame.getImage(i);
+                }
+            }
+
+            bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
+            bm.copyPixelsFromBuffer(rgb.getPixels());
+        }
+
+        frame.close();
+        return bm;
+    }
+
+    /*
+    public Bitmap getBitmapGrayScale() throws InterruptedException {
+        Bitmap bm = null;
+
+        if(opModeIsActive()&& !isStopRequested()){
+            frame = vuforia.getFrameQueue().take();
+            long num = frame.getNumImages();
+
+            for(int i = 0; i < num; i++){
+                if(frame.getImage(i).getFormat() == PIXEL_FORMAT.GRAYSCALE){
+                    greyscale = frame.getImage(i);
+                }
+            }
+
+            bm = Bitmap.createBitmap(greyscale.getWidth(), greyscale.getHeight(), Bitmap.Config.ARGB_8888);
+            bm.copyPixelsFromBuffer(greyscale.getPixels());
+        }
+
+        frame.close();
+        return bm;
+    }
+    */
+
+    // GET NUMBER OF RINGS IN STACK - might have to calibrate at competition field bc of lighting
+    // ***WE CAN ALSO ATTACH A COLOR/LIGHT SENSOR TO GIVE LIGHT
+    // NOTE: Need to drive up to first mat line (the end of the tape)
+    public int detectStack(Bitmap bm, boolean left){
+
+        // frame height = 720 px, frame width = 1280
+
+        int numRings = 1; // pick closest for default value
+        int ringRed = 130; // current compromise in terms of lighting differences
+        int totalRed = 0;
+
+        if (left){
+            for (int x = 600; x < 800; x++){
+                for (int y = 360; y < bm.getHeight(); y++ ){
+                    if (red(bm.getPixel(x,y)) > ringRed)
+                        totalRed++;
+                }
+            }
+        }else{
+            // need to do right side
+        }
+
+        long one = 8000;
+        long two = 10000;
+        long three = 12000;
+
+        if (totalRed < one){
+            numRings = 1;
+        } else if (totalRed > two && totalRed < three){
+            numRings = 2;
+        } else if (totalRed > three){
+            numRings = 3;
+        }
+
+        // cut off top and bottom section of frame
+        // get total number of yellow pixels
+        // the greater the number of red pixels, the more number of rings
+
+        if (bm != null) {
+            telemetry.addData("numRings: ", numRings);
+            telemetry.addData("totalRed: ", totalRed);
+            telemetry.update();
+            sleep(1000);
+        }else{
+            telemetry.addData("Bitmap null:", "Default 1");
+            telemetry.update();
+        }
+
+        return numRings;
     }
 
     //RESET ENCODERS
@@ -201,8 +272,13 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
                 + Math.abs(LB.getCurrentPosition())
                 + Math.abs(RB.getCurrentPosition())
                 + Math.abs(RF.getCurrentPosition()))/4;*/
+
         int avg = (Math.abs(LF.getCurrentPosition())
                 + Math.abs(RF.getCurrentPosition()))/2;
+
+        // currently using front two motors because they have similar and accurate encoder values
+        // the back two motors are off - one is a bit over, one is a lot under
+
         return avg;
     }
 
@@ -249,6 +325,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         telemetry.update();
     }
 
+    // SET MOTOR POWERS IN DIFFERENT FORMATS (CHECK DOCUMENTATION FOR EACH CASE)
     public void setMotorPowers(String type, double lf_L, double rf_R, double lb, double rb) {
         double[] powers = {lf_L,rf_R,lb,rb};
 
@@ -341,7 +418,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
     }
 
-    //SHOW MOTOR TELEMETRY DATA
+    // SHOW MOTOR TELEMETRY DATA
     public void motorTelemetry(){
         telemetry.addData("avg:", getEncoderAvg());
         telemetry.addData("LF Power", LF.getPower() + " " + LF.getCurrentPosition());
@@ -371,7 +448,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     }
 
     // STRAFE DISTANCE
-    public void strafeDistance(double power, double inches, double seconds) throws InterruptedException{
+    public void strafeDistance(double power, double inches, double seconds){
 
         // positive power is right strafe and negative power is left strafe
         double total = inches * strafeEncoderToInches;
@@ -390,7 +467,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
-    public void strafeAdjust(double power, double inches, double tHeading, double seconds) throws InterruptedException{
+    // STRAFE ADJUST W/ GYRO ADJUSTMENT
+    public void strafeAdjust(double power, double inches, double tHeading, double seconds){
         // ORIENTATION -180 TO 180
         // LEFT = +, RIGHT = -
 
@@ -511,7 +589,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
-    //PID TURNING
+    // PID TURNING
     public void turnPID(double tAngle, double P, double I, double D, double seconds){
         // ORIENTATION -180 TO 180
         // - is right, + is left
@@ -569,11 +647,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
+    // GET IMU VALUE ON -180 TO 180 SCALE
     public double get180Yaw() { return imu.getAngularOrientation().firstAngle; }
 
-    //DETECT NUMBER OF RINGS
-
-    //INTAKE RINGS
+    // INTAKE RINGS
     public void runIntake(long milliseconds){
         // Ask mr galligher if i have to increment this as well like the flywheel
         intake.setPower(-0.8);
@@ -581,6 +658,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         intake.setPower(0);
     }
 
+    // START INTAKE MOTOR
     public void startIntake(){
         // Ask mr galligher if i have to increment this as well like the flywheel
         intake.setPower(-0.8);
@@ -617,6 +695,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         shooter.setPower(0);
     }
 
+    // INCREMENTALLY STARTS SHOOTER
     public void startShooter(){
         // ask Mr. Galligher if incrementing intake speed in tele-op is necessary
         // TIP: the brake mode should be a float for the fly wheel, increment/step up to full power for flywheel (within like half a second)
@@ -634,6 +713,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
     }
 
+    // FULL INTAKE AND SHOOTING PROCESS - ENTER NUMBER OF RINGS TO SHOOT
     public void launchCycle(int numCycles){
         // roughly written, still need to figure out timing between intake and loader
         startShooter();
@@ -666,8 +746,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     // ONE METHOD WITH COLOR SENSOR TO LINE UP WITH LAUNCH LINE
 
     // ONE METHOD TO SET ___
-
-    //
 
     @Override
     public void runOpMode() throws InterruptedException {}

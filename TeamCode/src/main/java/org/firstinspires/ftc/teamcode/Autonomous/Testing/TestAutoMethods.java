@@ -15,10 +15,12 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         init(hardwareMap, true);
-        //initBitmapVuforia();
 
         waitForStart();
-        launchCycle(3);
 
+        turnPID(90,0.8/180,0.0001,0.5,5000);
+        sleep(2000);
+
+        telemetry.update();
     }
 }
