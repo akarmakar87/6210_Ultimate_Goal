@@ -235,7 +235,7 @@ public class SkystoneLinearOpMode extends LinearOpMode {
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
-        //initBitmapVuforia();
+        initBitmapVuforia();
         telemetry.addData("Vuforia: ", "Initialization complete");
         telemetry.update();
 
