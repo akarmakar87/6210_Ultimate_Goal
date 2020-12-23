@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="TestAutoMethods", group = "auto") // BLUE SIDE
+//@Disabled
 
 public class TestAutoMethods extends UltimateGoalLinearOpMode {
 
@@ -15,12 +16,13 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         init(hardwareMap, true);
+        // initBitmapVuforia(); <-- remove comment if you need to use the camera
 
         waitForStart();
 
-        turnPID(90,0.8/180,0.0001,0.5,5000);
-        sleep(2000);
+        // write the methods that you want to test here
 
         telemetry.update();
+        sleep(2000); // <-- to allow the final telemetry info to show for a couple of seconds before exiting
     }
 }

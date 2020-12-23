@@ -18,16 +18,11 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-import java.util.Arrays;
-
 import static android.graphics.Color.red;
 
 public class UltimateGoalLinearOpMode extends LinearOpMode {
 
-    // DECLARE VARIABLES TO BE USED
-    ElapsedTime runtime;
-
-    //MOTORS
+    //-----DECLARE HARDWARE COMPONENTS-----//
     public DcMotor LF;
     public DcMotor RF;
     public DcMotor LB;
@@ -36,35 +31,41 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     public DcMotor shooter;
     public Servo loader;
 
-    //SENSORS
+    //-----DECLARE IMU VARIABLES-----//
     public BNO055IMU imu;
-
-    //GYRO VARIABLES
     Orientation angles;
 
-    //ticks per inch = (Motor revolutions * gear up ratio) / (wheel diameter * pie)
-    //Motor revolutions = COUNTS_PER_MOTOR_REV
-    //gear up ratio = 2:1   (ratio beyond motor)
-    //wheel diameter = WHEEL_DIAMETER_INCHES
-    static final double     COUNTS_PER_MOTOR_REV    = 560 ;    // REV Motor Encoder (1120 for 40:1) (560 for 20:1) (336 for 12:1)
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // This is < 1.0 if geared UP   (ratio is 2:1)
-    static final double     WHEEL_DIAMETER_INCHES   = 4;     // For figuring circumference
+    //-----DEFINE WHEEL/MOTOR SPECIFICATIONS-----//
 
-    public double encoderToInches = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/(WHEEL_DIAMETER_INCHES * Math.PI);
-    public double strafeEncoderToInches = 60;
+    static final double     COUNTS_PER_MOTOR_REV    = 560 ; // REV Motor Encoder (1120 for 40:1) (560 for 20:1) (336 for 12:1)
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // This is < 1.0 if geared UP (ratio is 2:1)
+    static final double     WHEEL_DIAMETER_INCHES   = 4;    // For figuring out circumference
 
-    // VUFORIA VARIABLES
-    public static final String VUFORIA_KEY = "AQt2xVL/////AAABmXIVKUnTcEJbqvVBjp/Sw/9SqarohYyKotzRjT/Xl1/S8KDwsFHv/zYw6rXqXTjKrnjk92GfBA4hbZaQP17d1N6BiBuXO2W/hFNoMGxiF+fWlnvtDmUM1H/MF9faMOjZcPNjnQ7X8DVwdDDha3A3aqaoegefkKxb4A5EjP8Xcb0EPJ1JA4RwhUOutLbCDJNKUq6nCi+cvPqShvlYTvXoROcOGWSIrPxMEiOHemCyuny7tJHUyEg2FTd2upiQygKAeD+LN3P3cT02aK6AJbQ0DlQccxAtoo1+b//H6/eGro2s0fjxA2dH3AaoHB7qkb2K0Vl7ReFEwX7wmqJleamNUG+OZu7K3Zm68mPudzNuhAWQ";
+    private double encoderToInches = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/(WHEEL_DIAMETER_INCHES * Math.PI);
+    private double strafeEncoderToInches = 60;
+
+    //-----VUFORIA VARIABLES-----//
+    private static final String VUFORIA_KEY = "AQt2xVL/////AAABmXIVKUnTcEJbqvVBjp/Sw/9SqarohYyKotzRjT/Xl1/S8KDwsFHv/zYw6rXqXTjKrnjk92GfBA4hbZaQP17d1N6BiBuXO2W/hFNoMGxiF+fWlnvtDmUM1H/MF9faMOjZcPNjnQ7X8DVwdDDha3A3aqaoegefkKxb4A5EjP8Xcb0EPJ1JA4RwhUOutLbCDJNKUq6nCi+cvPqShvlYTvXoROcOGWSIrPxMEiOHemCyuny7tJHUyEg2FTd2upiQygKAeD+LN3P3cT02aK6AJbQ0DlQccxAtoo1+b//H6/eGro2s0fjxA2dH3AaoHB7qkb2K0Vl7ReFEwX7wmqJleamNUG+OZu7K3Zm68mPudzNuhAWQ";
     private VuforiaLocalizer vuforia;
-
-    private VuforiaLocalizer.CloseableFrame frame; //takes the frame at the head of the queue
+    private VuforiaLocalizer.CloseableFrame frame; // Takes the frame at the head of the queue
     private Image rgb;
-    private Image greyscale;
 
-    // INITIALIZE
+    /**
+     * NOTE: It is important to make sure that no matter which method is running, if you hit the STOP button on the DS, it shouldn't throw an error.
+     *       If you try this and see that the method is throwing an error, add "throws Interruptedexception" in this part of the method declaration:
+     *       public void methodName() throws Interruptedexception {}
+     */
+
+    //-----INITIALIZATION METHODS-----//
+
+    /**
+     * PURPOSE: Initializes hardware components and IMU (gyro)
+     * @param map - always write 'hardwareMap' here
+     * @param auto - write True if program is auto, False if program is tele-op
+     *             NOTE: IMU will only initialize if auto is True
+     */
     public void init(HardwareMap map, boolean auto){
 
-        runtime     = new ElapsedTime();
         LF          = map.dcMotor.get("LF");
         RF          = map.dcMotor.get("RF");
         LB          = map.dcMotor.get("LB");
@@ -74,10 +75,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         loader      = map.servo.get("loader");
         imu         = map.get(BNO055IMU.class, "imu"); // Check which IMU is being used
 
-        LF.setDirection(DcMotorSimple.Direction.REVERSE);//goes backward on positive speed so reverse needed
+        LF.setDirection(DcMotorSimple.Direction.REVERSE); // Goes backward on positive speed so reverse needed
         RF.setDirection(DcMotorSimple.Direction.FORWARD);
         RB.setDirection(DcMotorSimple.Direction.FORWARD);
-        LB.setDirection(DcMotorSimple.Direction.REVERSE);//goes backward on positive speed so reverse needed
+        LB.setDirection(DcMotorSimple.Direction.REVERSE); // Goes backward on positive speed so reverse needed
         shooter.setDirection(DcMotorSimple.Direction.FORWARD);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -88,7 +89,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //SET UP GYRO
+        // Set up gyro
         angles = new Orientation();
 
         resetEncoders();
@@ -105,7 +106,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             imu.initialize(bparameters);
 
-            angles = imu.getAngularOrientation(); //GET ORIENTATION
+            angles = imu.getAngularOrientation(); // Get initial angular orientation
 
             telemetry.addData("Mode", "calibrating...");
             telemetry.update();
@@ -117,19 +118,18 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             telemetry.addData("IMU calib status", imu.getCalibrationStatus().toString());
             telemetry.update();
-
-            /*initVuforia();
-            telemetry.addData("Vuforia status:", "Initialized");
-            telemetry.update();*/
         }
 
-        // FINAL MESSAGE
+        // Final message
         telemetry.addData("Status: ", "All Initialized");
         telemetry.update();
     }
 
-    // INIT BITMAP VUFORIA
-    public void initBitmapVuforia(){
+    /**
+     * PURPOSE: Initialize the Vuforia instance for bitmapping
+     * NOTE: Basically, it turns on the phone camera - if you don't need the camera at the moment, comment out this method
+     */
+    public void initBitmapVuforia() {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -145,103 +145,11 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         telemetry.update();
     }
 
-    // GET BITMAP
-    public Bitmap getBitmap() throws InterruptedException {
-        Bitmap bm = null;
+    //-----UTILITY METHODS-----//
 
-        if(opModeIsActive()&& !isStopRequested()){
-            frame = vuforia.getFrameQueue().take();
-            long num = frame.getNumImages();
-
-            for(int i = 0; i < num; i++){
-                if(frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565){
-                    rgb = frame.getImage(i);
-                }
-            }
-
-            bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(rgb.getPixels());
-        }
-
-        frame.close();
-        return bm;
-    }
-
-    /*
-    public Bitmap getBitmapGrayScale() throws InterruptedException {
-        Bitmap bm = null;
-
-        if(opModeIsActive()&& !isStopRequested()){
-            frame = vuforia.getFrameQueue().take();
-            long num = frame.getNumImages();
-
-            for(int i = 0; i < num; i++){
-                if(frame.getImage(i).getFormat() == PIXEL_FORMAT.GRAYSCALE){
-                    greyscale = frame.getImage(i);
-                }
-            }
-
-            bm = Bitmap.createBitmap(greyscale.getWidth(), greyscale.getHeight(), Bitmap.Config.ARGB_8888);
-            bm.copyPixelsFromBuffer(greyscale.getPixels());
-        }
-
-        frame.close();
-        return bm;
-    }
-    */
-
-    // GET NUMBER OF RINGS IN STACK - might have to calibrate at competition field bc of lighting
-    // ***WE CAN ALSO ATTACH A COLOR/LIGHT SENSOR TO GIVE LIGHT
-    // NOTE: Need to drive up to first mat line (the end of the tape)
-    public int detectStack(Bitmap bm, boolean left){
-
-        // frame height = 720 px, frame width = 1280
-
-        int numRings = 1; // pick closest for default value
-        int ringRed = 130; // current compromise in terms of lighting differences
-        int totalRed = 0;
-
-        if (left){
-            for (int x = 600; x < 800; x++){
-                for (int y = 360; y < bm.getHeight(); y++ ){
-                    if (red(bm.getPixel(x,y)) > ringRed)
-                        totalRed++;
-                }
-            }
-        }else{
-            // need to do right side
-        }
-
-        long one = 8000;
-        long two = 10000;
-        long three = 12000;
-
-        if (totalRed < one){
-            numRings = 1;
-        } else if (totalRed > two && totalRed < three){
-            numRings = 2;
-        } else if (totalRed > three){
-            numRings = 3;
-        }
-
-        // cut off top and bottom section of frame
-        // get total number of yellow pixels
-        // the greater the number of red pixels, the more number of rings
-
-        if (bm != null) {
-            telemetry.addData("numRings: ", numRings);
-            telemetry.addData("totalRed: ", totalRed);
-            telemetry.update();
-            sleep(1000);
-        }else{
-            telemetry.addData("Bitmap null:", "Default 1");
-            telemetry.update();
-        }
-
-        return numRings;
-    }
-
-    //RESET ENCODERS
+    /**
+     * PURPOSE: Reset all drivetrain encoders
+     */
     public void resetEncoders(){
         RF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
@@ -262,10 +170,9 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         idle();
     }
 
-    //GET ENCODER AVERAGE
-    /**NOTE:
-     * Make sure all encoders work before dividing by 4 or put in a condition to determine if
-     * an encoder value is weird and divide accordingly
+    /**
+     * PURPOSE: Get average of drivetrain encoders
+     * NOTE: Only takes the average of the front two motors bc they seem most accurate; the back two motors are off - one is a bit over, one is a lot under
      */
     public int getEncoderAvg(){
         /*int avg = (Math.abs(LF.getCurrentPosition())
@@ -276,56 +183,18 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         int avg = (Math.abs(LF.getCurrentPosition())
                 + Math.abs(RF.getCurrentPosition()))/2;
 
-        // currently using front two motors because they have similar and accurate encoder values
-        // the back two motors are off - one is a bit over, one is a lot under
-
         return avg;
     }
 
-    //SET EACH MOTOR POWERS
-    public void stopMotors() {
-        LF.setPower(0);
-        RF.setPower(0);
-        LB.setPower(0);
-        RB.setPower(0);
-    }
-
-    public void setMotorPowersCorrection(String type, double lf_L, double rf_R, double lb, double rb) {
-        double[] powers = {lf_L,rf_R,lb,rb};
-        double[] corrections = {4696.0/4902,4696.0/4895,4696.0/5091,1};
-        //double[] corrections = {1.0,1.0,1.0,1.0};
-        for (int i = 0; i < 4; i++){
-             powers[i] = Range.clip(powers[i], -1, 1);
-        }
-
-        switch (type) {
-            case "ALL":
-                LF.setPower(powers[0]*corrections[0]);
-                RF.setPower(powers[0]*corrections[1]);
-                LB.setPower(powers[0]*corrections[2]);
-                RB.setPower(powers[0]*corrections[3]);
-                break;
-            case "SIDES":
-                LF.setPower(powers[0]*corrections[0]);
-                RF.setPower(powers[1]*corrections[1]);
-                LB.setPower(powers[0]*corrections[2]);
-                RB.setPower(powers[1]*corrections[3]);
-                break;
-            case "EACH":
-                LF.setPower(powers[0]*corrections[0]);
-                RF.setPower(powers[1]*corrections[1]);
-                LB.setPower(powers[2]*corrections[2]);
-                RB.setPower(powers[3]*corrections[3]);
-                break;
-            default:
-                telemetry.addData("Error:", "motor powers set incorrectly");
-                telemetry.update();
-        }
-        telemetry.addData("corrections", Arrays.toString(powers));
-        telemetry.update();
-    }
-
-    // SET MOTOR POWERS IN DIFFERENT FORMATS (CHECK DOCUMENTATION FOR EACH CASE)
+    /**
+     * PURPOSE: Set powers to the drivetrain motors in varying formats
+     * NOTE: More detailed instructions written in comments above cases
+     * @param type - set the type of format you want, the options are in the case switch within the method
+     * @param lf_L - power for either only LF motor, all left motors, or all motors (depends on type specified)
+     * @param rf_R - power for either only RF motor or for all right motors (depends on type specified)
+     * @param lb - power for LB motor
+     * @param rb - power for RB motor
+     */
     public void setMotorPowers(String type, double lf_L, double rf_R, double lb, double rb) {
         double[] powers = {lf_L,rf_R,lb,rb};
 
@@ -386,39 +255,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         telemetry.update();
     }
 
-    public void setMotorPowersDynamicCorrection(String type, double lf_L, double rf_R, double lb, double rb, double[] corrections) {
-        double[] powers = {lf_L,rf_R,lb,rb};
-
-        for (int i = 0; i < 4; i++){
-            powers[i] = Range.clip(powers[i], -1, 1);
-        }
-
-        switch (type) {
-            case "ALL":
-                LF.setPower(powers[0]*corrections[0]);
-                RF.setPower(powers[0]*corrections[1]);
-                LB.setPower(powers[0]*corrections[2]);
-                RB.setPower(powers[0]);
-                break;
-            case "SIDES":
-                LF.setPower(powers[0]*corrections[0]);
-                RF.setPower(powers[1]*corrections[1]);
-                LB.setPower(powers[0]*corrections[2]);
-                RB.setPower(powers[1]);
-                break;
-            case "EACH":
-                LF.setPower(powers[0]*corrections[0]);
-                RF.setPower(powers[1]*corrections[1]);
-                LB.setPower(powers[2]*corrections[2]);
-                RB.setPower(powers[3]);
-                break;
-            default:
-                telemetry.addData("Error:", "motor powers set incorrectly");
-                telemetry.update();
-        }
-    }
-
-    // SHOW MOTOR TELEMETRY DATA
+    /**
+     * PURPOSE: Displays telemetry of all motor information, such as power and encoder position
+     * NOTE: does NOT include telemetry.update(), so you'll have to add that in your program - this is so that you can add other info if you want before updating telemetry
+     */
     public void motorTelemetry(){
         telemetry.addData("avg:", getEncoderAvg());
         telemetry.addData("LF Power", LF.getPower() + " " + LF.getCurrentPosition());
@@ -427,27 +267,197 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         telemetry.addData("RB Power", RB.getPower() + " " + RB.getCurrentPosition());
     }
 
-    public void testEncoders(int targetTicks, double pwr){
-        resetEncoders();
-        while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < targetTicks){
+    /**
+     * PURPOSE: Stop all drivetrain motors
+     */
+    public void stopMotors() {
+        LF.setPower(0);
+        RF.setPower(0);
+        LB.setPower(0);
+        RB.setPower(0);
+    }
 
-            if (RB.getCurrentPosition() == 0){
-                setMotorPowers("ALL", pwr,0,0,0);
-            }else {
-                double[] corrections = {
-                        RB.getCurrentPosition()/LF.getCurrentPosition(),
-                        RB.getCurrentPosition()/RF.getCurrentPosition(),
-                        RB.getCurrentPosition()/LB.getCurrentPosition()};
-                telemetry.addData("corrections", Arrays.toString(corrections));
-                setMotorPowersDynamicCorrection("ALL", pwr, 0, 0, 0, corrections);
+    /**
+     * PURPOSE: Get IMU angle on a -180 to 180 scale
+     * NOTE: Remember that this is on a -180 to 180 scale - NOT 0 to 360. This means that you will figure out the angle you want to turn to on a -180 to 180 scale.
+     *       Also, contrary to what you'd think, LEFT TURN = POSITIVE direction and RIGHT TURN = NEGATIVE direction.
+     * @return the IMU's yaw angle
+     */
+    public double get180Yaw() { return imu.getAngularOrientation().firstAngle; }
+
+    //-----VISION METHODS-----//
+
+    /**
+     * PURPOSE: Get the Bitmap version of the image from the phone camera
+     * NOTE: A Bitmap is basically an array of pixels, each of which has an RGB value that you can analyze
+     * @return the Bitmap of image frame taken at that instant
+     * @throws InterruptedException
+     */
+    public Bitmap getBitmap() throws InterruptedException {
+        Bitmap bm = null;
+
+        if(opModeIsActive()&& !isStopRequested()){
+            frame = vuforia.getFrameQueue().take();
+            long num = frame.getNumImages();
+
+            for(int i = 0; i < num; i++){
+                if(frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565){
+                    rgb = frame.getImage(i);
+                }
             }
-            motorTelemetry();
+
+            bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
+            bm.copyPixelsFromBuffer(rgb.getPixels());
+        }
+
+        frame.close();
+        return bm;
+    }
+
+    /**
+     * PURPOSE: Get # of rings in stack
+     * NOTE: In order to detect properly, robot must drive up to first mat line (the end of the tape)
+     * ISSUES: Lighting causes red values to vary drastically - we could also attach a color/light sensor to give light
+     * @param bm - always write "getBitmap()" in this parameter
+     *           NOTE: You are basically passing in the Bitmap object returned from the getBitmap() method
+     * @param left - no matter the alliance color, if the robot is on the left of the stack, write True - otherwise write False
+     * @return the # of rings detected
+     */
+    public int detectStack(Bitmap bm, boolean left){
+
+        // frame height = 720 px, frame width = 1280
+
+        int numRings = 1; // pick closest for default value
+        int ringRed = 130; // current compromise in terms of lighting differences
+        int totalRed = 0;
+
+        if (left){
+            for (int x = 600; x < 800; x++){
+                for (int y = 360; y < bm.getHeight(); y++ ){
+                    if (red(bm.getPixel(x,y)) > ringRed)
+                        totalRed++;
+                }
+            }
+        }else{
+            // need to do right side
+        }
+
+        long one = 8000;
+        long two = 10000;
+        long three = 12000;
+
+        if (totalRed < one){
+            numRings = 1;
+        } else if (totalRed > two && totalRed < three){
+            numRings = 2;
+        } else if (totalRed > three){
+            numRings = 3;
+        }
+
+        // cut off top and bottom section of frame
+        // get total number of yellow pixels
+        // the greater the number of red pixels, the more number of rings
+
+        if (bm != null) {
+            telemetry.addData("numRings: ", numRings);
+            telemetry.addData("totalRed: ", totalRed);
+            telemetry.update();
+            sleep(1000);
+        }else{
+            telemetry.addData("Bitmap null:", "Default 1");
+            telemetry.update();
+        }
+
+        return numRings;
+    }
+
+    //-----DRIVETRAIN METHODS-----//
+
+    /**
+     * PURPOSE: Drive forward/backward with no correction
+     * NOTE: Without corrections, the driving veers severely, so I recommend not using this method if you don't need to
+     * @param power - write the max power you want to drive at (backwards = - power , forwards = + power)
+     * @param inches - # of inches you want to move (always positive value)
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     */
+    public void driveDistance(double power, double inches, double seconds){
+        double total = inches * encoderToInches;
+        double remaining, finalPower;
+        ElapsedTime t = new ElapsedTime();
+        t.reset();
+        resetEncoders();
+        while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < inches * encoderToInches && t.seconds() < seconds){
+            remaining = total - getEncoderAvg();
+            telemetry.addData("remaining:", remaining);
+            finalPower = (remaining/total) * power;
+            setMotorPowers("ALL",finalPower,0,0,0);
+            telemetry.addData("target:", inches*encoderToInches);
+        }
+        setMotorPowers("ALL", 0,0,0,0);
+    }
+
+    /**
+     * PURPOSE: Drive forward/backward w/ gyro correction
+     * NOTE: Preferably use this method for driving. The higher the speed, the more inaccurate it is.
+     * ISSUES: There is about an inch of sideways deviation (but it really just depends on speed and distance)
+     * @param power - write the max power you want to drive at (backwards = - power , forwards = + power)
+     * @param inches - # of inches you want to move (always positive value)
+     * @param tHeading - the angle you want it to align to while driving (relative to the initialization orientation)
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     */
+    public void driveAdjust(double power, double inches, double tHeading, double seconds){
+        // ORIENTATION -180 TO 180
+        // LEFT = +, RIGHT = -
+
+        double total = (inches) * encoderToInches; // -2 to account for drift
+        double remaining, finalPower, error, lp, rp, m = 1.5;
+        ElapsedTime t = new ElapsedTime();
+        t.reset();
+        resetEncoders();
+
+        while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < total && t.seconds() < seconds) {
+            remaining = total - getEncoderAvg();
+            error = tHeading - get180Yaw();
+
+            if(Math.abs(error) > 180) error = (error < 0) ? 360 + error : 360 - error;
+
+            finalPower = (remaining / total) * power;
+            if (finalPower != 0) finalPower = (finalPower > 0) ? Range.clip(finalPower,0.3,1) : Range.clip(finalPower,-1,-0.3);
+
+            rp = finalPower;
+            lp = finalPower;
+
+            if (power < 0) {
+                if (error > 1){
+                    lp *= 1.25;
+                } else if (error < -1)
+                    rp *= 1.75;
+            } else {
+                if (error < 1) {
+                    rp *= m;
+                }else if (error < -1)
+                    lp *= m;
+            }
+
+            setMotorPowers("SIDES",lp,rp,0,0);
+
+            telemetry.addData("left power: ", lp)
+                    .addData("right power: ", rp)
+                    .addData("error", error)
+                    .addData("current angle", get180Yaw())
+                    .addData("target angle", tHeading);
             telemetry.update();
         }
         stopMotors();
     }
 
-    // STRAFE DISTANCE
+    /**
+     * PURPOSE: Strafe a certain distance without correction
+     * NOTE: Without corrections, the strafing is very messed up, so I recommend not using this method if you don't need to
+     * @param power - write the max power you want to drive at (left = - power , right = + power)
+     * @param inches - # of inches you want to move (always positive value)
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     */
     public void strafeDistance(double power, double inches, double seconds){
 
         // positive power is right strafe and negative power is left strafe
@@ -467,7 +477,15 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
-    // STRAFE ADJUST W/ GYRO ADJUSTMENT
+    /**
+     * PURPOSE: Strafe a certain distance w/ gyro correction
+     * NOTE: If you are going to strafe at all, use this method. The lower the speed, the more inaccurate it tends to be.
+     * ISSUES: The # of inches traveled isn't always exactly accurate and there is a bit of forward/backward deviation (depends on the speed).
+     * @param power - write the max power you want to drive at (left = - power , right = + power)
+     * @param inches - # of inches you want to move (always positive value)
+     * @param tHeading - the angle you want it to align to while driving (relative to the initialization orientation)
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     */
     public void strafeAdjust(double power, double inches, double tHeading, double seconds){
         // ORIENTATION -180 TO 180
         // LEFT = +, RIGHT = -
@@ -522,89 +540,25 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
-    // DRIVE FORWARD & BACKWARD
-    public void driveDistance(double maxPower, double inches, double seconds){
-        double total = inches * encoderToInches;
-        double remaining, finalPower;
-        ElapsedTime t = new ElapsedTime();
-        t.reset();
-        resetEncoders();
-        while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < inches * encoderToInches && t.seconds() < seconds){
-            remaining = total - getEncoderAvg();
-            telemetry.addData("remaining:", remaining);
-            finalPower = (remaining/total) * maxPower;
-            setMotorPowers("ALL",finalPower,0,0,0);
-            telemetry.addData("target:", inches*encoderToInches);
-            //motorTelemetry();
-        }
-        setMotorPowers("ALL", 0,0,0,0);
-    }
-
-    // DRIVE W/ GYRO ADJUSTMENT
-    public void driveAdjust(double tHeading, double power, double inches, double seconds){
-        // ORIENTATION -180 TO 180
-        // LEFT = +, RIGHT = -
-
-        double total = (inches) * encoderToInches; // -2 to account for drift
-        double remaining, finalPower, error, lp, rp, m = 1.5;
-        ElapsedTime t = new ElapsedTime();
-        t.reset();
-        resetEncoders();
-
-        while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < total && t.seconds() < seconds) {
-            remaining = total - getEncoderAvg();
-            error = tHeading - get180Yaw(); //GET ANGLE REMAINING TO TURN (tANGLE MEANS TARGET ANGLE, AS IN THE ANGLE YOU WANNA GO TO)
-
-            if(Math.abs(error) > 180) error = (error < 0) ? 360 + error : 360 - error;
-
-            finalPower = (remaining / total) * power;
-            if (finalPower != 0) finalPower = (finalPower > 0) ? Range.clip(finalPower,0.3,1) : Range.clip(finalPower,-1,-0.3);
-
-            rp = finalPower;
-            lp = finalPower;
-
-            // unfortunately there is about an inch of lateral deviation
-
-            if (power < 0) {
-                if (error > 1){
-                    lp *= 1.25;
-                } else if (error < -1)
-                    rp *= 1.75;
-            } else {
-                if (error < 1) {
-                    rp *= m;
-                }else if (error < -1)
-                    lp *= m;
-            }
-
-            setMotorPowers("SIDES",lp,rp,0,0);
-
-            telemetry.addData("left power: ", lp)
-                    .addData("right power: ", rp)
-                    .addData("error", error)
-                    .addData("current angle", get180Yaw())
-                    .addData("target angle", tHeading);
-            telemetry.update();
-        }
-        stopMotors();
-    }
-
-    // PID TURNING
-    public void turnPID(double tAngle, double P, double I, double D, double seconds){
-        // ORIENTATION -180 TO 180
-        // - is right, + is left
-        // constants P: 0.8/180    I: 0.0001   D: 0.5 <--last years
-
-        //turnPID(90,0.8/180,0.0001,0.5,5000);
-        //turnPID(180,0.8/180,0.00005,0.1,5000);
+    /**
+     * PURPOSE: Rotate using PID control
+     * NOTE: You'll have to individually fine tune each PID turn with the kP, kI, and kD constants.
+     *   --> I believe the best practice is to start with kP, then add a VERY small value for kI, then add kD if needed.
+     *   --> You can also check out this page for more details: https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
+     * ISSUES: The minimum speed the motors can turn properly at is 0.3, which might be disadvantage to turning since slower is better - however, you can work around it.
+     * EXAMPLES OF ALREADY TUNED PID TURNS:
+     *      turnPID(90,0.8/180,0.0001,0.5,5000); <-- you can use these!
+     *      turnPID(180,0.8/180,0.00005,0.1,5000); <-- ^
+     * @param tAngle - the angle you want it to turn to on a -180 t0 180 scale (relative to the initialization orientation)
+     * @param kP - usually something/180
+     * @param kI - usually something super tiny like 0.0001 or 0.00001
+     * @param kD - usually something from 0-1 like 0.5
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     */
+    public void turnPID(double tAngle, double kP, double kI, double kD, double seconds){
 
         double power, prevError, error, dT, prevTime, currTime; //DECLARE ALL VARIABLES
 
-        double kP = P;
-        double kI = I;
-        double kD = D;
-
-        //prevError =
         error = tAngle - get180Yaw(); //INITIALIZE THESE VARIABLES
 
         currTime = 0.0;
@@ -627,10 +581,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             power = (error * kP) + ((error) * dT * kI) + ((error - prevError)/dT * kD);
 
             if (power < 0)
-                //setMotorPowers("SIDES",Range.clip(-power, 0.2, 0.5), Range.clip(power, -0.5, -0.2),0,0);
                 setMotorPowers("SIDES",-power, power,0,0);
             else
-                //setMotorPowers("SIDES",Range.clip(-power, -0.5, -0.2), Range.clip(power, 0.2, 0.5),0,0);
                 setMotorPowers("SIDES",-power, power,0,0);
 
             telemetry.addData("tAngle: ", tAngle)
@@ -647,24 +599,32 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
-    // GET IMU VALUE ON -180 TO 180 SCALE
-    public double get180Yaw() { return imu.getAngularOrientation().firstAngle; }
+    //-----MANIPULATOR MECHANISM METHODS-----//
 
-    // INTAKE RINGS
+    /**
+     * PURPOSE: Run the intake for a certain amount of time
+     * NOTE: Power is currently set to 0.8 because anything greater launches the wheel over the loading zone
+     * ISSUES: Not an issue, but I'm not sure if I'm supposed to increment the starting speed like I did for the flywheel...
+     * @param milliseconds - enter the number of milliseconds you want intake to run for (1000 milliseconds = 1 second)
+     */
     public void runIntake(long milliseconds){
-        // Ask mr galligher if i have to increment this as well like the flywheel
         intake.setPower(-0.8);
         sleep(milliseconds);
         intake.setPower(0);
     }
 
-    // START INTAKE MOTOR
+    /**
+     * PURPOSE: Starts intake motor - that's it
+     */
     public void startIntake(){
-        // Ask mr galligher if i have to increment this as well like the flywheel
         intake.setPower(-0.8);
     }
 
-    //LOAD RINGS
+    /**
+     * PURPOSE: Set the loader stick to a certain position
+     * NOTE: There is a 1500 millisecond wait time to allow it to complete the servo movement before continuing to the next action - you can reduce it if needed.
+     * @param deploy - True = extends stick, False = retracts stick
+     */
     public void setLoader(boolean deploy){
         if (deploy)
             loader.setPosition(0);
@@ -672,38 +632,18 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             loader.setPosition(1);
 
         sleep(1500);
-        // reduce or remove wait time if needed
     }
 
-    // SHOOT RINGS (DO PHYSICS CALCULATIONS)
-    public void runShooter(long milliseconds){
-        // ask Mr. Galligher if incrementing intake speed in tele-op is necessary
-        // TIP: the brake mode should be a float for the fly wheel, increment/step up to full power for flywheel (within like half a second)
+    /**
+     * PURPOSE: Start up the shooter flywheel
+     * NOTE: I set the max speed to 0.75, but you can increase/decrease it depending on how high/far you want to shoot.
+     *       Also, the brake mode should be a FLOAT for the fly wheel & increment/step up to full power for flywheel (within like half a second).
+     * @param max - enter the speed you want to set the flywheel to
+     */
+    public void startShooter(double max){
 
         double speed = 0;
 
-        // adjust max speed as needed
-        while (speed < 1) {
-            speed += 0.2;
-            shooter.setPower(speed);
-            telemetry.addData("shooter speed:", speed);
-            telemetry.update();
-            sleep(100);
-        }
-
-        sleep(milliseconds);
-        shooter.setPower(0);
-    }
-
-    // INCREMENTALLY STARTS SHOOTER
-    public void startShooter(){
-        // ask Mr. Galligher if incrementing intake speed in tele-op is necessary
-        // TIP: the brake mode should be a float for the fly wheel, increment/step up to full power for flywheel (within like half a second)
-
-        double speed = 0;
-        double max = 0.75;
-
-        // adjust max speed as needed
         while (speed < max) {
             speed += max/5;
             shooter.setPower(speed);
@@ -713,11 +653,30 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
     }
 
-    // FULL INTAKE AND SHOOTING PROCESS - ENTER NUMBER OF RINGS TO SHOOT
-    public void launchCycle(int numCycles){
-        // roughly written, still need to figure out timing between intake and loader
-        startShooter();
+    /**
+     * PURPOSE: Complete full launch cycles
+     * ISSUE: Roughly written, might need to tweak timing between intake and loader
+     * @param zone - I just put this as an idea that you could specify the zone you want to shoot in and it will set the speed accordingly
+     * @param numCycles - enter the # of rings you want to launch
+     */
+    public void launchCycle(int zone, int numCycles){
+
+        switch (zone){
+            case 1:
+                startShooter(0.75); // These are placeholders for the actual speed values
+                break;
+            case 2:
+                startShooter(0.75);
+                break;
+            case 3:
+                startShooter(0.75);
+                break;
+            default:
+                telemetry.addData("Error:","Zone not specified correctly");
+                telemetry.update();
+        }
         startIntake();
+
         for (int i = 0; i < numCycles; i++){
             sleep(1000);
             setLoader(true);
@@ -731,21 +690,13 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         intake.setPower(0);
     }
 
-    //GRAB & RELEASE WOBBLE
+    //-----FUTURE METHODS-----//
 
-    //******************************************************************************//
-
-    // AUTONOMOUS METHODS:
+    // GRAB & RELEASE WOBBLE
 
     // ONE METHOD FOR MOVING BACK AND FORTH BETWEEN DROP ZONES AND LAUNCH LINE (PARAMS: WHICH BOX TO GO TO, WHICH LINE START AT)
 
-    // ONE METHOD TO DETECT THE NUMBER RINGS STACKED IN AUTO (PARAMS: BITMAP OBJECT)
-
-    // ONE METHOD TO DO POWERSHOTS IN AUTO (PARAMS: BOX)
-
     // ONE METHOD WITH COLOR SENSOR TO LINE UP WITH LAUNCH LINE
-
-    // ONE METHOD TO SET ___
 
     @Override
     public void runOpMode() throws InterruptedException {}
