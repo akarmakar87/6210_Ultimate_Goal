@@ -399,6 +399,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     /**
      * PURPOSE: Drive forward/backward w/ gyro correction
      * NOTE: Preferably use this method for driving. The higher the speed, the more inaccurate it is.
+     *       -- Also,if you want the correction to be more immediate/aggressive, slightly increase the value of m
+     *          However, keep in mind that too high of an m-value MAY cause it to move like a snake since it'll constantly be overshooting and correcting.
      * ISSUES: There is about an inch of sideways deviation (but it really just depends on speed and distance)
      * @param power - write the max power you want to drive at (backwards = - power , forwards = + power)
      * @param inches - # of inches you want to move (always positive value)
@@ -429,14 +431,14 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             if (power < 0) {
                 if (error > 1){
-                    lp *= 1.25;
+                    lp *= m - 0.25;
                 } else if (error < -1)
-                    rp *= 1.75;
+                    rp *= m + 0.25; // The RB motor is much less powerful so the right side needs an extra boost in addition to the correction factor (m), hence the + 0.25
             } else {
                 if (error < 1) {
-                    rp *= m;
+                    rp *= m + 0.25;
                 }else if (error < -1)
-                    lp *= m;
+                    lp *= m - 0.25;
             }
 
             setMotorPowers("SIDES",lp,rp,0,0);
