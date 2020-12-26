@@ -78,10 +78,10 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Intake
 
             if(gamepad1.right_bumper){
-                intake.setPower(0.5);
+                intake.setPower(0.8);
             }
             else if(gamepad1.left_bumper){
-                intake.setPower(-0.5);
+                intake.setPower(-0.8);
             }
             else{
                 intake.setPower(0);

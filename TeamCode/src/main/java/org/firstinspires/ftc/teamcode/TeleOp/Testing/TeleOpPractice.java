@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOpPractice", group = "teleop")
-@Disabled
+//@Disabled
 public class TeleOpPractice extends UltimateGoalLinearOpMode {
 
     @Override
@@ -75,7 +75,7 @@ public class TeleOpPractice extends UltimateGoalLinearOpMode {
 
             // Intake
 
-            if(gamepad2.right_bumper){
+            if(gamepad1.right_bumper){
                 // intakeL.setPower(-1);
                 // intakeR.setPower(-1);
             }
