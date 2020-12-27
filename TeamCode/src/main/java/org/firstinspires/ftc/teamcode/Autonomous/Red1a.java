@@ -23,18 +23,18 @@ public class Red1a extends UltimateGoalLinearOpMode {
         //CHOSE WHETHER SHOOTING FOR HIGH GOAL OR POWERSHOT (BUTTON ON GAMEPAD)
 
         waitForStart();
-/*
+
         // GRAB WOBBLE
         //deploy arm
         //clamp wobble
         //retract arm
 
         // DETECT # OF RINGS
-        driveAdjust(0.5, 5, 0, 2000);
+        driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack(getBitmap(), false);
 
         // ALIGN WITH DEPOT
-        driveAdjust(0.8, 24 + 24*pos, 0, 5000);
+        driveAdjust(0.6, 24 + 24*pos, 0, 5000);
 
         // TURN TOWARD DEPOT
         if (pos == 1 || pos == 3)
@@ -47,33 +47,34 @@ public class Red1a extends UltimateGoalLinearOpMode {
         //deploy arm
         //release wobble
         //retract arm
-*/
+
         // ALIGN PERPENDICULAR TO WHITE LINE
-        turnPID(180,0.8/180,0.0001,0.5,5000);
-/*
+        turnPID(180,0.8/180,0.0001,0.01,5000);
+
         // BACK UP PAST WHITE LINE
-        driveAdjust(0.8, 24*(pos-1), 180, 5000);
+        driveAdjust(0.6, 24 + 24*pos, 180, 5000);
 
-        // ROTATE OUTPUT TOWARD POWERSHOTS PARALLEL TO WHITE LINE
-        turnPID(90,0.8/180,0.0001,0.5,5000);
+        // ROTATE TO FIRE AT RIGHT POWERSHOT
+        turnPID(180,0.8/180,0.0001,0.01,5000);
 
-        // MOVE UNTIL COLINEAR WITH MIDDLE POWERSHOT
-        driveAdjust(0.8, -36, 90, 5000);
+        // FIRE 1
+        startShooter(1);
+        setLoader(true);
+        setLoader(false);
 
-        // ROTATE OUTPUT TOWARD POWERSHOTS (OR HIGH GOAL) PERPENDICULAR TO WHITE LINE
-        turnPID(180,0.8/180,0.0001,0.5,5000);
-*/
-        // FIRE!!!
+        // ROTATE TO FIRE AT MIDDLE POWERSHOT
 
-        // ROTATE 7.125 DEGREES TO THE RIGHT (TOWARD RIGHT POWERSHOT)
+        // FIRE 2
 
-        // FIRE!!!
+        // ROTATE TO FIRE AT LEFT POWERSHOT
 
-        // ROTATE 14.25 DEGREES TO THE LEFT (TOWARD LEFT POWERSHOT)
+        // FIRE 3
 
-        // FIRE!!!
+        // ALIGN PERPENDICULAR WITH WHITE LINE
+        turnPID(0,0.8/180,0.0001,0.5,5000);
 
-        // MOVE FORWARD INTO WHITE LINE (BECOME PERPENDICULAR AGAIN BEFORE IF YOU WANT)
+        // MOVE FORWARD INTO WHITE LINE
+        driveAdjust(0.6, 60, 0, 5000);
 
 
         telemetry.addData("auto:", "complete");

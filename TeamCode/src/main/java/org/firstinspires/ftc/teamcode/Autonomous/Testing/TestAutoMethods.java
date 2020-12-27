@@ -21,9 +21,9 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         waitForStart();
 
         // write the methods that you want to test here
-        driveAdjust(0.8, 48, 0, 5000);
-        turnPID(180,0.8/180,0.0001,0.5,5000);
+        driveAdjust(0.6, 48, 180, 5000);
+        //turnPID(180,0.8/180,0.0001,0.5,5000);
         telemetry.update();
-        sleep(2000); // <-- to allow the final telemetry info to show for a couple of seconds before exiting
+        sleep(10000); // <-- to allow the final telemetry info to show for a couple of seconds before exiting
     }
 }
