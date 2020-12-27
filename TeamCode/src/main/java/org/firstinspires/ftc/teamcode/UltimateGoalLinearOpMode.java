@@ -411,6 +411,9 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         // ORIENTATION -180 TO 180
         // LEFT = +, RIGHT = -
 
+        // positive error = need to turn left = increase right power
+        // negative error = need to turn right = increase left power
+
         double total = (inches) * encoderToInches; // -2 to account for drift
         double remaining, finalPower, error, lp, rp, m = 1.5;
         ElapsedTime t = new ElapsedTime();
@@ -431,14 +434,14 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             if (power < 0) {
                 if (error > 1){
-                    lp *= m - 0.25;
+                    lp *= m;
                 } else if (error < -1)
                     rp *= m + 0.25; // The RB motor is much less powerful so the right side needs an extra boost in addition to the correction factor (m), hence the + 0.25
             } else {
-                if (error < 1) {
+                if (error > 1) {
                     rp *= m + 0.25;
                 }else if (error < -1)
-                    lp *= m - 0.25;
+                    lp *= m;
             }
 
             setMotorPowers("SIDES",lp,rp,0,0);
