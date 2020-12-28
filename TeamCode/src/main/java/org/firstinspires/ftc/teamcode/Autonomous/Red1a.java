@@ -32,9 +32,10 @@ public class Red1a extends UltimateGoalLinearOpMode {
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack(getBitmap(), false);
+        pos = 3;
 
         // ALIGN WITH DEPOT
-        driveAdjust(0.8, 28 + 23*pos, 0, 5000);
+        driveAdjust(0.8, 24 + 25*pos, 0, 5000);
 
         // TURN TOWARD DEPOT
         if (pos == 1 || pos == 3)

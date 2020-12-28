@@ -458,6 +458,69 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
+    public void driveAdjustShooter(double power, double inches, double tHeading, double seconds, double max){
+        // ORIENTATION -180 TO 180
+        // LEFT = +, RIGHT = -
+
+        // positive error = need to turn left = increase right power
+        // negative error = need to turn right = increase left power
+
+        double total = (inches) * encoderToInches; // -2 to account for drift
+        double remaining, finalPower, error, lp, rp, m = 1.5;
+        ElapsedTime t = new ElapsedTime();
+        t.reset();
+        resetEncoders();
+
+        double speed = 0;
+        double newTime = -300;
+        ElapsedTime time = new ElapsedTime();
+
+        while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < total && t.seconds() < seconds) {
+
+            if (newTime + 100 <= time.milliseconds() && speed < max){
+                newTime = time.milliseconds();
+                speed += max/5;
+                shooter.setPower(speed);
+            }
+
+            remaining = total - getEncoderAvg();
+
+            if(tHeading == 180 && get180Yaw() < 0) tHeading = -tHeading; // if error is negative, uses -180 as the target heading instead of 180
+            error = tHeading - get180Yaw();
+
+            if(Math.abs(error) > 180) error = (error < 0) ? 360 + error : 360 - error;
+
+            finalPower = (remaining / total) * power;
+            if (finalPower != 0) finalPower = (finalPower > 0) ? Range.clip(finalPower,0.3,1) : Range.clip(finalPower,-1,-0.3);
+
+            rp = finalPower;
+            lp = finalPower;
+
+            if (power < 0) {
+                if (error > 1){
+                    lp *= m;
+                } else if (error < -1)
+                    rp *= m + 0.25; // The RB motor is much less powerful so the right side needs an extra boost in addition to the correction factor (m), hence the + 0.25
+            } else {
+                if (error > 1) {
+                    rp *= m + 0.25;
+                }else if (error < -1)
+                    lp *= m;
+            }
+
+            setMotorPowers("SIDES",lp,rp,0,0);
+
+            telemetry.addData("left power: ", lp)
+                    .addData("right power: ", rp)
+                    .addData("error", error)
+                    .addData("current angle", get180Yaw())
+                    .addData("target angle", tHeading)
+                    .addData("speed", speed);
+            telemetry.update();
+        }
+        stopMotors();
+    }
+
     /**
      * PURPOSE: Strafe a certain distance without correction
      * NOTE: Without corrections, the strafing is very messed up, so I recommend not using this method if you don't need to

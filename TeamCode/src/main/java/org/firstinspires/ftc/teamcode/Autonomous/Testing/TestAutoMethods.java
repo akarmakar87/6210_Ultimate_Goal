@@ -21,8 +21,11 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         waitForStart();
 
         // write the methods that you want to test here
-        startShooter(1);
-        sleep(2000);
+        driveAdjustShooter(0.8, 45, 0, 5000, 1);
+
+        //startShooter(1);
+        //sleep(2000);
+        shooter.setPower(1);
         setLoader(true);
         setLoader(false);
         sleep(500);
@@ -31,6 +34,7 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         sleep(500);
         setLoader(true);
         setLoader(false);
+        shooter.setPower(0);
         //turnPID(180,0.8/180,0.0001,0.5,5000);
         telemetry.update();
         sleep(10000); // <-- to allow the final telemetry info to show for a couple of seconds before exiting
