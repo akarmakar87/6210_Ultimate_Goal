@@ -577,9 +577,9 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             error = tAngle - get180Yaw(); //GET ANGLE REMAINING TO TURN (tANGLE MEANS TARGET ANGLE, AS IN THE ANGLE YOU WANNA GO TO)
 
             if(error > 180){
-                error = -(error-180);
+                error = (error-360);
             }else  if(error < -180){
-                error = -(error+180);
+                error = (error+360);
             }
 
             prevTime = currTime;
@@ -587,6 +587,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             dT = currTime - prevTime; //GET DIFFERENCE IN CURRENT TIME FROM PREVIOUS TIME
             power = (error * kP) + ((error) * dT * kI) + ((error - prevError)/dT * kD);
 
+            //A (-) POWER TURNS LEFT AND A (+) TURNS RIGHT
             if (power < 0)
                 setMotorPowers("SIDES",-power, power,0,0);
             else
@@ -656,7 +657,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             shooter.setPower(speed);
             telemetry.addData("shooter speed:", speed);
             telemetry.update();
-            sleep(100);
+            sleep(300);
         }
     }
 

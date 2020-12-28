@@ -4,10 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
+import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="Blue 1a", group = "auto") // BLUE SIDE
 @Disabled
-public class Blue1a extends SkystoneLinearOpMode { //<-- MAKE SURE TO SWITCH TO ULTIMATE GOAL LINEAR OPMODE!!!!!!!
+public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH TO ULTIMATE GOAL LINEAR OPMODE!!!!!!!
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,39 +25,57 @@ public class Blue1a extends SkystoneLinearOpMode { //<-- MAKE SURE TO SWITCH TO 
 
         waitForStart();
 
-        // DETECT # OF RINGS
-
-        // STRAFE ROBOT INTO WOBBLE
-
         // GRAB WOBBLE
+        //deploy arm
+        //clamp wobble
+        //retract arm
 
-        // ROTATE SO WOBBLE FACES DIRECTION OF DEPOT
-        //if(a || c) { woble on left } else {wobble on right}
+        // DETECT # OF RINGS
+        driveAdjust(0.6, 5, 0, 2000);
+        pos = detectStack(getBitmap(), false);
 
-        // DRIVE TOWARD DEPOT
+        // ALIGN WITH DEPOT
+        driveAdjust(0.6, 24 + 23*pos, 0, 5000);
+
+        // TURN TOWARD DEPOT
+        if (pos == 1 || pos == 3)
+            turnPID(45,0.8/180,0.0001,0.5,5000);
+        else
+            turnPID(-45,0.8/180,0.0001,0.5,5000);
 
         // RELEASE WOBBLE
+        sleep(2000);
+        //deploy arm
+        //release wobble
+        //retract arm
 
-        // BACK UP TO WHITE LINE + 1'
+        // ALIGN PERPENDICULAR TO WHITE LINE
+        turnPID(180,0.8/180,0.0001,0.01,5000);
 
-        // ROTATE OUTPUT TOWARD POWERSHOTS PARALLEL TO WHITE LINE
+        // BACK UP PAST WHITE LINE
+        driveAdjust(0.6, 24 + 24*pos, 180, 5000);
 
-        // MOVE UNTIL COLINEAR WITH MIDDLE POWERSHOT
+        // ROTATE TO FIRE AT RIGHT POWERSHOT
+        turnPID(180,0.8/180,0.0001,0.01,5000);
 
-        // ROTATE OUTPUT TOWARD POWERSHOTS (OR HIGH GOAL) PERPENDICULAR TO WHITE LINE
+        // FIRE 1
+        startShooter(1);
+        setLoader(true);
+        setLoader(false);
 
-        // FIRE!!!
+        // ROTATE TO FIRE AT MIDDLE POWERSHOT
 
-        // ROTATE 7.125 DEGREES TO THE RIGHT (TOWARD RIGHT POWERSHOT)
+        // FIRE 2
 
-        // FIRE!!!
+        // ROTATE TO FIRE AT LEFT POWERSHOT
 
-        // ROTATE 14.25 DEGREES TO THE LEFT (TOWARD LEFT POWERSHOT)
+        // FIRE 3
 
-        // FIRE!!!
+        // ALIGN PERPENDICULAR WITH WHITE LINE
+        turnPID(0,0.8/180,0.0001,0.5,5000);
 
-        // MOVE FORWARD INTO WHITE LINE (BECOME PERPENDICULAR AGAIN BEFORE IF YOU WANT)
-
+        // MOVE FORWARD INTO WHITE LINE
+        driveAdjust(0.6, 60, 0, 5000);
 
         telemetry.addData("auto:", "complete");
         telemetry.update();
