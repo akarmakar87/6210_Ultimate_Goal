@@ -422,6 +422,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested() && getEncoderAvg() < total && t.seconds() < seconds) {
             remaining = total - getEncoderAvg();
+
+            if(tHeading == 180 && get180Yaw() < 0) tHeading = -tHeading; // if error is negative, uses -180 as the target heading instead of 180
             error = tHeading - get180Yaw();
 
             if(Math.abs(error) > 180) error = (error < 0) ? 360 + error : 360 - error;
