@@ -33,9 +33,10 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack(getBitmap(), false);
+        pos = 3;
 
         // ALIGN WITH DEPOT
-        driveAdjust(0.6, 24 + 23*pos, 0, 5000);
+        driveAdjust(0.8, 24 + 25*pos, 0, 5000);
 
         // TURN TOWARD DEPOT
         if (pos == 1 || pos == 3)
@@ -50,18 +51,24 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         //retract arm
 
         // ALIGN PERPENDICULAR TO WHITE LINE
-        turnPID(180,0.8/180,0.0001,0.01,5000);
+        turnPID(180,0.6/180,0.00005,0.1,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjust(0.6, 24 + 24*pos, 180, 5000);
+        driveAdjust(0.8, 18 + 24*pos, 180, 5000);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
-        turnPID(180,0.8/180,0.0001,0.01,5000);
+        // turnPID(180,0.6/180,0.00005,0.1,5000);
 
         // FIRE 1
         startShooter(1);
+        sleep(2000);
         setLoader(true);
         setLoader(false);
+        setLoader(true);
+        setLoader(false);
+        setLoader(true);
+        setLoader(false);
+        shooter.setPower(0);
 
         // ROTATE TO FIRE AT MIDDLE POWERSHOT
 
@@ -72,10 +79,11 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         // FIRE 3
 
         // ALIGN PERPENDICULAR WITH WHITE LINE
-        turnPID(0,0.8/180,0.0001,0.5,5000);
+        turnPID(0,0.6/180,0.00005,0.1,5000);
 
         // MOVE FORWARD INTO WHITE LINE
-        driveAdjust(0.6, 60, 0, 5000);
+        driveAdjust(0.8, 48, 0, 5000);
+
 
         telemetry.addData("auto:", "complete");
         telemetry.update();
