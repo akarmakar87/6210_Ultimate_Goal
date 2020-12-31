@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="Blue 1a", group = "auto") // BLUE SIDE
-@Disabled
+//@Disabled
 public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH TO ULTIMATE GOAL LINEAR OPMODE!!!!!!!
 
     @Override
@@ -33,7 +33,7 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack(getBitmap(), false);
-        pos = 3;
+        pos = 2;
 
         // ALIGN WITH DEPOT
         driveAdjust(0.8, 24 + 25*pos, 0, 5000);

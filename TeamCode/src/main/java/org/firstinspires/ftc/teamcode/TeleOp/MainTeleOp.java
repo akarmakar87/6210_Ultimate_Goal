@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
@@ -18,8 +20,17 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         final double POWER_CAP = 1.0;
         double shooterPower = 0;
 
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
+
+        double prevTime = -1000;
+        int speed = 0;
+
         //sets up imu and inits all motors
         init(hardwareMap, false);
+
+        int lastEncoder = shooter.getCurrentPosition();
+
 
         telemetry.addData("teleop:", "waiting for start");
         telemetry.update();
@@ -121,9 +132,18 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             // Arm
 
-        }
+            if (prevTime + 1000 <= time.milliseconds()){
+                prevTime = time.milliseconds();
+                speed = shooter.getCurrentPosition() - lastEncoder;
+                lastEncoder = shooter.getCurrentPosition();
+            }
 
-        telemetry.addData("shooterPower:", shooterPower);
-        telemetry.update();
+            telemetry.addData("shooterPower:", shooterPower);
+            telemetry.addData("shooter encoders:", shooter.getCurrentPosition());
+            telemetry.addData("time:", time.milliseconds());
+            telemetry.addData("encoders per second", speed);
+            telemetry.update();
+
+        }
     }
 }

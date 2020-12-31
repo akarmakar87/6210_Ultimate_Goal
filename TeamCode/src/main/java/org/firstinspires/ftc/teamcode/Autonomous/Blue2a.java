@@ -38,15 +38,15 @@ public class Blue2a extends UltimateGoalLinearOpMode {
         // ALIGN WITH DEPOT
         switch (pos) {
             case 1:
-                dist = 57;
+                dist = 57+5;
                 wait = 1250;
                 break;
             case 2:
-                dist = 72;
+                dist = 72+5;
                 wait = 750;
                 break;
             case 3:
-                dist = 100;
+                dist = 100+5;
                 wait = 500;
                 break;
         }
@@ -57,18 +57,20 @@ public class Blue2a extends UltimateGoalLinearOpMode {
 
         if (pos == 1 || pos == 3) {
             turnPID(90, 0.8 / 180, 0.0001, 0.5, 5000);
-            driveAdjust(0.6, 14, -90, 3);
+            driveAdjust(0.6, 20, 90, 3);
         }
-        else
-            turnPID(45, 0.8 / 180, 0.0001, 0.5, 5000);
+        turnPID(45, 0.8 / 180, 0.0001, 0.5, 5000);
 
         // RELEASE WOBBLE
         sleep(2000);
         //deploy arm
         //release wobble
         //retract arm
-        if (pos == 1 || pos == 3)
-            driveAdjust(-0.6, 14, -90, 3);
+        if (pos == 1 || pos == 3){
+            turnPID(90, 0.8 / 180, 0.0001, 0.5, 5000);
+            driveAdjust(-0.6, 20, 90, 3);
+        }
+
 
         // ALIGN PERPENDICULAR TO WHITE LINE
         turnPID(180,0.6/180,0.0001,0.01,5000);
