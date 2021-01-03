@@ -415,6 +415,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
      * NOTE: Preferably use this method for driving. The higher the speed, the more inaccurate it is.
      *       -- Also,if you want the correction to be more immediate/aggressive, slightly increase the value of m
      *          However, keep in mind that too high of an m-value MAY cause it to move like a snake since it'll constantly be overshooting and correcting.
+     *       -- the difference from driveAdjust is that within the while loops the code uses a time object
+     *          to rev up the motor
      * ISSUES: There is about an inch of sideways deviation (but it really just depends on speed and distance)
      * @param power - write the max power you want to drive at (backwards = - power , forwards = + power)
      * @param inches - # of inches you want to move (always positive value)
