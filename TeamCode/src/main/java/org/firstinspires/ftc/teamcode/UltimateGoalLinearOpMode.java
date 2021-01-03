@@ -411,12 +411,16 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     }
 
     /**
-     * PURPOSE:
-     * @param power
-     * @param inches
-     * @param tHeading
-     * @param seconds
-     * @param max
+     * PURPOSE: Drive forward/backward w/ gyro correction while revving up the shooter
+     * NOTE: Preferably use this method for driving. The higher the speed, the more inaccurate it is.
+     *       -- Also,if you want the correction to be more immediate/aggressive, slightly increase the value of m
+     *          However, keep in mind that too high of an m-value MAY cause it to move like a snake since it'll constantly be overshooting and correcting.
+     * ISSUES: There is about an inch of sideways deviation (but it really just depends on speed and distance)
+     * @param power - write the max power you want to drive at (backwards = - power , forwards = + power)
+     * @param inches - # of inches you want to move (always positive value)
+     * @param tHeading - the angle you want it to align to while driving (relative to the initialization orientation)
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     * @param max - final speed of the motor, the maximum speed it will reach
      */
     public void driveAdjustShooter(double power, double inches, double tHeading, double seconds, double max){
         // ORIENTATION -180 TO 180
