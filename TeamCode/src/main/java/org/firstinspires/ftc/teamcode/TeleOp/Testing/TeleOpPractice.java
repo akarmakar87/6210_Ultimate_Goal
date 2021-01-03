@@ -17,7 +17,7 @@ public class TeleOpPractice extends UltimateGoalLinearOpMode {
         final double POWER_CAP = 1.0;
 
         //sets up imu and inits all motors
-        init(hardwareMap, false);
+        init(hardwareMap, 0);
 
         telemetry.addData("teleop:", "waiting for start");
         telemetry.update();

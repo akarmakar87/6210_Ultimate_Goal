@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="Red 1a", group = "auto") // RED SIDE
@@ -13,8 +12,8 @@ public class Red1a extends UltimateGoalLinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //sets up imu and vuforia
-        init(hardwareMap, true);
-        initBitmapVuforia();
+        init(hardwareMap, 1);
+        initOpenCV();
 
         int pos = 0;
         double adjust = 0.0;
@@ -31,7 +30,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
 
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
-        pos = detectStack(getBitmap(), false);
+        pos = detectStack();
         pos = 3;
 
         // ALIGN WITH DEPOT

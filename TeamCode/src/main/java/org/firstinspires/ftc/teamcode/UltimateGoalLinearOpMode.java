@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Bitmap;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,19 +8,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Vuforia;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-
-import static android.graphics.Color.red;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 public class UltimateGoalLinearOpMode extends LinearOpMode {
 
     //-----DECLARE HARDWARE COMPONENTS-----//
+
     public DcMotor LF;
     public DcMotor RF;
     public DcMotor LB;
@@ -32,6 +28,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     public Servo loader;
 
     //-----DECLARE IMU VARIABLES-----//
+
     public BNO055IMU imu;
     Orientation angles;
 
@@ -44,11 +41,11 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     private double encoderToInches = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/(WHEEL_DIAMETER_INCHES * Math.PI);
     private double strafeEncoderToInches = 60;
 
-    //-----VUFORIA VARIABLES-----//
-    private static final String VUFORIA_KEY = "AQt2xVL/////AAABmXIVKUnTcEJbqvVBjp/Sw/9SqarohYyKotzRjT/Xl1/S8KDwsFHv/zYw6rXqXTjKrnjk92GfBA4hbZaQP17d1N6BiBuXO2W/hFNoMGxiF+fWlnvtDmUM1H/MF9faMOjZcPNjnQ7X8DVwdDDha3A3aqaoegefkKxb4A5EjP8Xcb0EPJ1JA4RwhUOutLbCDJNKUq6nCi+cvPqShvlYTvXoROcOGWSIrPxMEiOHemCyuny7tJHUyEg2FTd2upiQygKAeD+LN3P3cT02aK6AJbQ0DlQccxAtoo1+b//H6/eGro2s0fjxA2dH3AaoHB7qkb2K0Vl7ReFEwX7wmqJleamNUG+OZu7K3Zm68mPudzNuhAWQ";
-    private VuforiaLocalizer vuforia;
-    private VuforiaLocalizer.CloseableFrame frame; // Takes the frame at the head of the queue
-    private Image rgb;
+    //-----OPENCV VARIABLES-----//
+
+    OpenCvInternalCamera phoneCam;
+    StackDeterminationPipeline pipeline;
+    boolean leftPos;
 
     /**
      * NOTE: It is important to make sure that no matter which method is running, if you hit the STOP button on the DS, it shouldn't throw an error.
@@ -61,10 +58,13 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     /**
      * PURPOSE: Initializes hardware components and IMU (gyro)
      * @param map - always write 'hardwareMap' here
-     * @param auto - write True if program is auto, False if program is tele-op
-     *             NOTE: IMU will only initialize if auto is True
+     * @param auto - write...
+     *              0 if program is NOT auto,
+     *             -1 if robot starts on left,
+     *              1 if robot starts on right
+     * NOTE: IMU will only initialize if auto is NOT 0
      */
-    public void init(HardwareMap map, boolean auto){
+    public void init(HardwareMap map, int auto){
 
         LF          = map.dcMotor.get("LF");
         RF          = map.dcMotor.get("RF");
@@ -97,7 +97,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         // Make sure loader is retracted
         setLoader(false);
 
-        if (auto) {
+        if (auto != 0) {
             BNO055IMU.Parameters bparameters = new BNO055IMU.Parameters();
             bparameters.mode = BNO055IMU.SensorMode.IMU;
             bparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -116,6 +116,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
                 idle();
             }
 
+            // if auto value is -1, set left position variable to true
+            leftPos = auto == -1 ? true : false;
             telemetry.addData("IMU calib status", imu.getCalibrationStatus().toString());
             telemetry.update();
         }
@@ -125,24 +127,25 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         telemetry.update();
     }
 
-    /**
-     * PURPOSE: Initialize the Vuforia instance for bitmapping
-     * NOTE: Basically, it turns on the phone camera - if you don't need the camera at the moment, comment out this method
+    /** PURPOSE: Initializes OpenCV variables
+     *  Note: In here, you can set the camera direction and orientation
      */
-    public void initBitmapVuforia() {
-
+    public void initOpenCV(){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, cameraMonitorViewId); // Change to FRONT camera
+        pipeline = new StackDeterminationPipeline(leftPos);
+        phoneCam.setPipeline(pipeline);
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
-        vuforia.setFrameQueueCapacity(1); //tells VuforiaLocalizer to only store one frame at a time
-
-        telemetry.addData("Vuforia:", "initialized");
-        telemetry.update();
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); // change to upright phone orientation
+            }
+        });
     }
 
     //-----UTILITY METHODS-----//
@@ -288,87 +291,36 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     //-----VISION METHODS-----//
 
     /**
-     * PURPOSE: Get the Bitmap version of the image from the phone camera
-     * NOTE: A Bitmap is basically an array of pixels, each of which has an RGB value that you can analyze
-     * @return the Bitmap of image frame taken at that instant
-     * @throws InterruptedException
+     * PURPOSE: Detect the number of rings in the stack
+     * ISSUES: If the robot is on the RIGHT starting line, robot needs to turn 15 degrees left to get the stack in view.
+     *         This turn is hard to tune bc the min power is 0.3 but that's enough to overshoot the target angle.
+     *         Also, it's not final yet whether we will turn or strafe or whatnot
+     * NOTE: Works pretty well, regardless of lighting differences - just make sure surroundings are fairly bright.
+     *       The left starting position is preferable, since we don't have to turn to view the stack.
+     * @return # of rings in stack
      */
-    public Bitmap getBitmap() throws InterruptedException {
-        Bitmap bm = null;
+    public int detectStack(){
 
-        if(opModeIsActive()&& !isStopRequested()){
-            frame = vuforia.getFrameQueue().take();
-            long num = frame.getNumImages();
+        if (!leftPos) // if starting position is NOT on the left, then turn left
+            turnPID(15,0.3/180,0,0.01,5000); // need to fine tune
 
-            for(int i = 0; i < num; i++){
-                if(frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565){
-                    rgb = frame.getImage(i);
-                }
-            }
+        sleep(1000); // half a second wait time between turning and detecting
 
-            bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(rgb.getPixels());
-        }
+        int numRings = pipeline.getPosition();
 
-        frame.close();
-        return bm;
+        telemetry.addData("numRings:", numRings);
+        telemetry.update();
+        return numRings;
     }
 
     /**
-     * PURPOSE: Get # of rings in stack
-     * NOTE: In order to detect properly, robot must drive up to first mat line (the end of the tape)
-     * ISSUES: Lighting causes red values to vary drastically - we could also attach a color/light sensor to give light
-     * @param bm - always write "getBitmap()" in this parameter
-     *           NOTE: You are basically passing in the Bitmap object returned from the getBitmap() method
-     * @param left - no matter the alliance color, if the robot is on the left of the stack, write True - otherwise write False
-     * @return the # of rings detected
+     * PURPOSE: Use this method when simply testing the stack detection in a teleop program
      */
-    public int detectStack(Bitmap bm, boolean left){
-
-        // frame height = 720 px, frame width = 1280
-
-        int numRings = 1; // pick closest for default value
-        int ringRed = 130; // current compromise in terms of lighting differences
-        int totalRed = 0;
-
-        if (left){
-            for (int x = 600; x < 800; x++){
-                for (int y = 360; y < bm.getHeight(); y++ ){
-                    if (red(bm.getPixel(x,y)) > ringRed)
-                        totalRed++;
-                }
-            }
-        }else{
-            // need to do right side
-        }
-
-        long one = 8000;
-        long two = 10000;
-        long three = 12000;
-
-        if (totalRed < one){
-            numRings = 1;
-        } else if (totalRed > two && totalRed < three){
-            numRings = 2;
-        } else if (totalRed > three){
-            numRings = 3;
-        }
-
-        // cut off top and bottom section of frame
-        // get total number of yellow pixels
-        // the greater the number of red pixels, the more number of rings
-
-        if (bm != null) {
-            telemetry.addData("numRings: ", numRings);
-            telemetry.addData("totalRed: ", totalRed);
-            telemetry.update();
-            sleep(1000);
-        }else{
-            telemetry.addData("Bitmap null:", "Default 1");
-            telemetry.update();
-        }
-
-        return numRings;
+    public void detectStackTesting(){
+        telemetry.addData("Analysis", pipeline.getAnalysis());
+        telemetry.addData("Position", pipeline.getPosition());
+        sleep(50);
+        telemetry.update();
     }
 
     //-----DRIVETRAIN METHODS-----//
@@ -458,6 +410,14 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         stopMotors();
     }
 
+    /**
+     * PURPOSE:
+     * @param power
+     * @param inches
+     * @param tHeading
+     * @param seconds
+     * @param max
+     */
     public void driveAdjustShooter(double power, double inches, double tHeading, double seconds, double max){
         // ORIENTATION -180 TO 180
         // LEFT = +, RIGHT = -
@@ -760,14 +720,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         shooter.setPower(0);
         intake.setPower(0);
     }
-
-    //-----FUTURE METHODS-----//
-
-    // GRAB & RELEASE WOBBLE
-
-    // ONE METHOD FOR MOVING BACK AND FORTH BETWEEN DROP ZONES AND LAUNCH LINE (PARAMS: WHICH BOX TO GO TO, WHICH LINE START AT)
-
-    // ONE METHOD WITH COLOR SENSOR TO LINE UP WITH LAUNCH LINE
 
     @Override
     public void runOpMode() throws InterruptedException {}

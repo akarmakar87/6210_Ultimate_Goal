@@ -17,8 +17,8 @@ public class TestSensors extends UltimateGoalLinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        init(hardwareMap, false);
-        //initBitmapVuforia(); <-- remove comment if you need to use the camera
+        init(hardwareMap, -1);
+        initOpenCV(); // <-- remove comment if you need to use the camera
 
         telemetry.addData("teleop:", "waiting for start");
         telemetry.update();
@@ -26,10 +26,7 @@ public class TestSensors extends UltimateGoalLinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-            // Write whatever you want to test here
-
-            telemetry.update();
+            detectStack();
         }
 
         telemetry.addData("teleop:", "complete");

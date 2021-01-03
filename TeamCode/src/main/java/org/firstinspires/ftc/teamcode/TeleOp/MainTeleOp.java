@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.SkystoneLinearOpMode;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MainTeleOp", group = "teleop")
@@ -27,7 +24,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         int speed = 0;
 
         //sets up imu and inits all motors
-        init(hardwareMap, false);
+        init(hardwareMap, 0);
 
         int lastEncoder = shooter.getCurrentPosition();
 
