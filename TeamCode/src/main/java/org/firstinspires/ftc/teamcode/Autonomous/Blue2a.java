@@ -32,12 +32,12 @@ public class Blue2a extends UltimateGoalLinearOpMode {
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack();
-        pos=3;
+        pos=1;
 
         // ALIGN WITH DEPOT
         switch (pos) {
             case 1:
-                dist = 57+5;
+                dist = 55+5;
                 wait = 1250;
                 break;
             case 2:

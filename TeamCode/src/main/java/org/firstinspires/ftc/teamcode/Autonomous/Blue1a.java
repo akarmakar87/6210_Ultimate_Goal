@@ -31,7 +31,7 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack();
-        pos = 2;
+        pos = 3;
 
         // ALIGN WITH DEPOT
         driveAdjust(0.8, 24 + 25*pos, 0, 5000);
