@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -332,6 +331,24 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     }
 
     //-----DRIVETRAIN METHODS-----//
+    /**
+     * PURPOSE: Implement holonomic drive (arcade) with mecanum wheels. Left joystick drive, right joystick turning.
+     * @param leftY - Left joystick y
+     * @param leftX - Left joystick x
+     * @param rightX - Right joystick x
+     * @return motor powers array [LF, RF, LB, RB]
+     */
+    public double[] holonomicDrive(double leftY, double leftX, double rightX)
+    {
+        double[] motorPower = {0.0, 0.0, 0.0, 0.0};
+
+        motorPower[0] = leftY - leftX + rightX;
+        motorPower[1] = leftY - leftX - rightX;
+        motorPower[2] = leftY + leftX + rightX;
+        motorPower[3] = leftY + leftX - rightX;
+
+        return motorPower;
+    }
 
     /**
      * PURPOSE: Drive forward/backward with no correction

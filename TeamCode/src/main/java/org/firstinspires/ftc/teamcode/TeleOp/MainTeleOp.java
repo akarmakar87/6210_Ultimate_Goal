@@ -16,6 +16,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         final double STICK_SCALE = 7;
         final double POWER_CAP = 1.0;
         double shooterPower = 0;
+        double[] motorP = {0.0, 0.0, 0.0, 0.0};
 
         ElapsedTime time = new ElapsedTime();
         time.reset();
@@ -37,8 +38,9 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         while (opModeIsActive()) {
 
             // Movement
+            double yAxis, xAxis, zAxis;
 
-            double inputXlf = 0, inputYlf = 0, inputXrf = 0, inputYrf = 0;
+            /*double inputXlf = 0, inputYlf = 0, inputXrf = 0, inputYrf = 0;
             double inputXlb = 0, inputYlb = 0, inputXrb = 0, inputYrb = 0;
             double inputTurn = 0;
 
@@ -82,6 +84,35 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             RF.setPower(Range.clip(inputRF, -POWER_CAP, POWER_CAP));
             LB.setPower(Range.clip(inputLB, -POWER_CAP, POWER_CAP));
             RB.setPower(Range.clip(inputRB, -POWER_CAP, POWER_CAP));
+            */
+
+            //CONTROLLER INPUTS
+            yAxis = -gamepad1.left_stick_y;
+            xAxis = gamepad1.left_stick_x;
+            zAxis = gamepad1.right_stick_x * 0.75;
+
+            if (Math.abs(gamepad1.left_stick_x) > STICK_THRESHHOLD ||
+                    Math.abs(gamepad1.left_stick_y) > STICK_THRESHHOLD ||
+                    Math.abs(gamepad1.right_stick_x) > STICK_THRESHHOLD) {
+
+                motorP = holonomicDrive(yAxis, xAxis, zAxis);
+
+            }
+
+            else {
+
+                motorP[0] = 0;
+                motorP[1] = 0;
+                motorP[2] = 0;
+                motorP[3] = 0;
+
+            }
+
+            //SET MOTOR POWERS
+            LF.setPower(Range.clip(motorP[0], -POWER_CAP, POWER_CAP));
+            RF.setPower(Range.clip(motorP[1], -POWER_CAP, POWER_CAP));
+            LB.setPower(Range.clip(motorP[2], -POWER_CAP, POWER_CAP));
+            RB.setPower(Range.clip(motorP[3], -POWER_CAP, POWER_CAP));
 
             // Intake
 
