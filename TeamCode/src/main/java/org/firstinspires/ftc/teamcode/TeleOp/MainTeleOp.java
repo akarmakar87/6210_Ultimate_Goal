@@ -129,12 +129,14 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             // Arm
             if(Math.abs(gamepad2.right_stick_y) > 0.05)
-                wobbleArm.setPower(gamepad2.right_stick_y);
+                wobbleArm.setPower(gamepad2.right_stick_y*-0.75);
+            else
+                wobbleArm.setPower(0);
 
             if(gamepad2.a)
-                wobbleClaw.setPosition(1);
+                setWobbleClaw(true);
             if(gamepad2.b)
-                wobbleClaw.setPosition(0);
+                setWobbleClaw(false);
 
             if (prevTime + 1000 <= time.milliseconds()){
                 prevTime = time.milliseconds();
@@ -146,6 +148,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             telemetry.addData("shooter encoders:", shooter.getCurrentPosition());
             telemetry.addData("time:", time.milliseconds());
             telemetry.addData("encoders per second", speed);
+            telemetry.addData("wobbleArm", wobbleArm.getCurrentPosition());
             telemetry.update();
 
         }

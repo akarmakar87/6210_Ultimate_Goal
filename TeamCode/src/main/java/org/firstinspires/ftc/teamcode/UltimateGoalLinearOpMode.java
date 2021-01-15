@@ -86,7 +86,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         LB.setDirection(DcMotorSimple.Direction.REVERSE); // Goes backward on positive speed so reverse needed
         shooter.setDirection(DcMotorSimple.Direction.FORWARD);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        wobbleArm.setDirection(DcMotorSimple.Direction.FORWARD);
+        wobbleArm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         LF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -105,6 +105,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         setLoader(false);
 
         if (auto != 0) {
+            setWobbleClaw(true);
             BNO055IMU.Parameters bparameters = new BNO055IMU.Parameters();
             bparameters.mode = BNO055IMU.SensorMode.IMU;
             bparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -354,7 +355,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
         setMotorPowers("ALL", 0,0,0,0);
     }
-
     /**
      * PURPOSE: Drive forward/backward w/ gyro correction
      * NOTE: Preferably use this method for driving. The higher the speed, the more inaccurate it is.
@@ -732,6 +732,29 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
         shooter.setPower(0);
         intake.setPower(0);
+    }
+
+    public void setWobbleArm(boolean deployed) {
+        wobbleArm.setPower(1);
+        wobbleArm.setTargetPosition(wobbleArm.getCurrentPosition());
+        wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (deployed) {
+            wobbleArm.setTargetPosition(150);
+            sleep(2000);
+        }
+        else{
+            wobbleArm.setTargetPosition(0);
+            sleep(2000);
+        }
+    }
+
+    public void setWobbleClaw(boolean deployed) {
+        if (deployed) {
+            wobbleClaw.setPosition(0);
+        }
+        else {
+            wobbleClaw.setPosition(1);
+        }
     }
 
     @Override
