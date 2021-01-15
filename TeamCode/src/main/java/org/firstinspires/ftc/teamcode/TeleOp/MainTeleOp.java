@@ -128,6 +128,13 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             // Arm
+            if(Math.abs(gamepad2.right_stick_y) > 0.05)
+                wobbleArm.setPower(gamepad2.right_stick_y);
+
+            if(gamepad2.a)
+                wobbleClaw.setPosition(1);
+            if(gamepad2.b)
+                wobbleClaw.setPosition(0);
 
             if (prevTime + 1000 <= time.milliseconds()){
                 prevTime = time.milliseconds();

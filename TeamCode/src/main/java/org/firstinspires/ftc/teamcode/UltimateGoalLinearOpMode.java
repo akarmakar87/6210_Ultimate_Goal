@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -25,6 +26,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     public DcMotor RB;
     public DcMotor intake;
     public DcMotor shooter;
+    public DcMotor wobbleArm;
+    public Servo wobbleClaw;
     public Servo loader;
 
     //-----DECLARE IMU VARIABLES-----//
@@ -72,6 +75,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         RB          = map.dcMotor.get("RB");
         intake      = map.dcMotor.get("intake");
         shooter     = map.dcMotor.get("shooter");
+        wobbleArm   = map.dcMotor.get("wobbleArm");
+        wobbleClaw  = map.servo.get("wobbleClaw");
         loader      = map.servo.get("loader");
         imu         = map.get(BNO055IMU.class, "imu"); // Check which IMU is being used
 
@@ -81,6 +86,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         LB.setDirection(DcMotorSimple.Direction.REVERSE); // Goes backward on positive speed so reverse needed
         shooter.setDirection(DcMotorSimple.Direction.FORWARD);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        wobbleArm.setDirection(DcMotorSimple.Direction.FORWARD);
 
         LF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -88,6 +94,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         RB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wobbleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set up gyro
         angles = new Orientation();
