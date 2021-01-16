@@ -342,9 +342,9 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     {
         double[] motorPower = {0.0, 0.0, 0.0, 0.0};
 
-        motorPower[0] = leftY - leftX + rightX;
+        motorPower[0] = leftY + leftX + rightX;
         motorPower[1] = leftY - leftX - rightX;
-        motorPower[2] = leftY + leftX + rightX;
+        motorPower[2] = leftY - leftX + rightX;
         motorPower[3] = leftY + leftX - rightX;
 
         return motorPower;
