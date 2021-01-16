@@ -46,8 +46,8 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         sleep(10000); // <-- to allow the final telemetry info to show for a couple of seconds before exiting
          */
 
-        setWobbleArm(true);
-        setWobbleClaw(false);
-        setWobbleArm(false);
+        driveAdjust(0.6, 5, 0, 2000);
+        driveAdjust(0.6, 30, 0, 3000);
+        driveAdjust(-0.6, 30, 0, 3000);
     }
 }

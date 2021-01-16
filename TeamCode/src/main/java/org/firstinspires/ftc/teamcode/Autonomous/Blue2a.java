@@ -32,19 +32,18 @@ public class Blue2a extends UltimateGoalLinearOpMode {
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack();
-        pos=1;
 
         // ALIGN WITH DEPOT
         switch (pos) {
-            case 1:
+            case 0:
                 dist = 55+5;
                 wait = 1250;
                 break;
-            case 2:
+            case 1:
                 dist = 72+5;
                 wait = 750;
                 break;
-            case 3:
+            case 4:
                 dist = 100+5;
                 wait = 500;
                 break;
@@ -61,10 +60,13 @@ public class Blue2a extends UltimateGoalLinearOpMode {
         turnPID(45, 0.8 / 180, 0.0001, 0.5, 5000);
 
         // RELEASE WOBBLE
-        sleep(2000);
         //deploy arm
+        setWobbleArm(true);
         //release wobble
+        setWobbleClaw(false);
         //retract arm
+        setWobbleArm(false);
+
         if (pos == 1 || pos == 3){
             turnPID(90, 0.8 / 180, 0.0001, 0.5, 5000);
             driveAdjust(-0.6, 20, 90, 3);

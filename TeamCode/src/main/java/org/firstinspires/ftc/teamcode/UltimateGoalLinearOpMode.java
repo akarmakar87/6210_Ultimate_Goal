@@ -317,6 +317,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         telemetry.addData("numRings:", numRings);
         telemetry.update();
+        if (!leftPos) // if starting position is NOT on the left, then back straight
+            turnPID(0,0.3/180,0,0.01,5000); // need to fine tune
         return numRings;
     }
 

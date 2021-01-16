@@ -15,7 +15,8 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         init(hardwareMap, -1);
         initOpenCV();
 
-        int pos = 0;
+        int pos, dist = 0;
+        int wait = 0;
         double adjust = 0.0;
         double longAdjust = 0.0;
 
@@ -31,28 +32,41 @@ public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH
         // DETECT # OF RINGS
         driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack();
-        pos = 3;
 
         // ALIGN WITH DEPOT
         driveAdjust(0.8, 24 + 25*pos, 0, 5000);
 
         // TURN TOWARD DEPOT
-        if (pos == 1 || pos == 3)
-            turnPID(45,0.8/180,0.0001,0.5,5000);
-        else
-            turnPID(-45,0.8/180,0.0001,0.5,5000);
+        switch (pos) {
+            case 0:
+                dist = 55+5;
+                wait = 1250;
+                break;
+            case 1:
+                dist = 72+5;
+                wait = 750;
+                break;
+            case 4:
+                dist = 100+5;
+                wait = 500;
+                break;
+        }
+
+        driveAdjust(0.8, dist, 0, 5000);
 
         // RELEASE WOBBLE
-        sleep(2000);
         //deploy arm
+        setWobbleArm(true);
         //release wobble
+        setWobbleClaw(false);
         //retract arm
+        setWobbleArm(false);
 
         // ALIGN PERPENDICULAR TO WHITE LINE
         turnPID(180,0.6/180,0.00005,0.1,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjust(0.8, 18 + 24*pos, 180, 5000);
+        driveAdjust(0.8, dist-12, 180, 5000);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         // turnPID(180,0.6/180,0.00005,0.1,5000);
