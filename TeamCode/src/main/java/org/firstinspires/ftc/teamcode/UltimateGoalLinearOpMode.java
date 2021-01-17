@@ -350,7 +350,64 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         motorPower[2] = leftY - leftX + rightX;
         motorPower[3] = leftY + leftX - rightX;
 
-        return scalePower(motorPower[0], motorPower[1], motorPower[2], motorPower[3]);
+        return scalePower(motorPower);
+    }
+
+    /**
+     * PURPOSE: Scale powers to the correct proportional ratios when powers are greater than 1
+     * @param power - motor powers array [LF, RF, LB, RB]
+     * @return corrected motor powers array [LF, RF, LB, RB]
+     */
+    public double[] scalePower(double[] power){
+        //Find max
+        double max = Math.abs(power[0]);
+        for (int i = 1; i < power.length; i++){
+            double p = Math.abs(power[i]);
+            if (p > max) max = p;
+        }
+
+        //Scale powers from max
+        for (int i = 0; i < power.length; i++){
+            power[i] /= max;
+        }
+
+        return power;
+    }
+
+    /**
+     * PURPOSE: Proportional autoturn to target angle
+     * @param zeroAng - 0 to 360 reset angle
+     * @param tarAng - target orientation robot should turn to (-180 to 180 angle)
+     * @return motor powers array [LF, RF, LB, RB]
+     */
+    public double[] autoTurn(double zeroAng, double tarAng){
+        double[] power = {0.0, 0.0, 0.0, 0.0};
+        double angle = get180Yaw();
+        double error, mPower = 0;
+        //Find angle
+        angle -= zeroAng;
+        if (angle < -180){
+            angle += 360;
+        }
+
+        error = tarAng - angle;
+        mPower = error * 0.05;
+
+        if(mPower < 0){ //negative turn left
+            power[0] = mPower;
+            power[1] = -mPower;
+            power[2] = mPower;
+            power[3] = -mPower;
+
+
+        }else{ //positive turn right
+            power[0] = -mPower;
+            power[1] = mPower;
+            power[2] = -mPower;
+            power[3] = mPower;
+        }
+
+        return scalePower(power);
     }
 
     /**
@@ -771,26 +828,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         else {
             wobbleClaw.setPosition(1);
         }
-    }
-
-    public double[] scalePower(double LF, double RF, double LB, double RB) { //important for if we try to turn while strafing
-        double[] power = {LF, RF, LB, RB};
-        double max = Math.abs(power[0]);
-        int index = 0;
-        while (index < power.length) { //find the max power to scale all the powers down by it
-            if (Math.abs(power[index]) > max) {
-                max = Math.abs(power[index]);
-            }
-            index += 1;
-        }
-
-        if (max > 1.0) {
-            for (int i = 0; i < power.length; i++) {
-                power[i] /= max;
-            }
-        }
-
-        return power;
     }
 
     @Override
