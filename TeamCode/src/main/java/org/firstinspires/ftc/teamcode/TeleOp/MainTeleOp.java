@@ -83,10 +83,10 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Intake
 
             if(gamepad1.right_bumper){
-                intake.setPower(-0.85);
+                intake.setPower(-0.80);
             }
             else if(gamepad1.left_bumper){
-                intake.setPower(0.85);
+                intake.setPower(0.80);
             }
             else{
                 intake.setPower(0);
@@ -102,15 +102,6 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
             else{
                 shooter.setPower(0);
-            }
-
-            if(gamepad1.dpad_up){
-                shooterPower = Range.clip(shooterPower+.05, -1,1);
-                shooter.setPower(shooterPower);
-            }
-            if(gamepad1.dpad_down){
-                shooterPower = Range.clip(shooterPower-.05, -1,1);
-                shooter.setPower(shooterPower);
             }
 
             //Loader
@@ -146,7 +137,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             telemetry.addData("time:", time.milliseconds());
             telemetry.addData("encoders per second", speed);
             telemetry.addData("wobbleArm", wobbleArm.getCurrentPosition());
-            telemetry.update();
+            //telemetry.update();
 
         }
     }

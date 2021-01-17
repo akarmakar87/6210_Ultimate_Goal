@@ -16,6 +16,9 @@ public class Red2a extends UltimateGoalLinearOpMode {
         initOpenCV();
 
         int pos, dist = 0;
+        int ag1 = 180;
+        int ag2 = 180;
+        int ag3 = 180;
         int wait = 0;
         double adjust = 0.0;
         double longAdjust = 0.0;
@@ -38,14 +41,23 @@ public class Red2a extends UltimateGoalLinearOpMode {
             case 0:
                 dist = 60;
                 wait = 1250;
+                ag1 = -175;
+                ag2 = -179;
+                ag3 = -177;
                 break;
             case 1:
-                dist = 70;
+                dist = 75;
                 wait = 750;
+                ag1 = 179;
+                ag2 = 175;
+                ag3 = 171;
                 break;
             case 4:
                 dist = 105;
                 wait = 500;
+                ag1 = -175;
+                ag2 = -179;
+                ag3 = -177;
                 break;
         }
 
@@ -72,7 +84,7 @@ public class Red2a extends UltimateGoalLinearOpMode {
         //    driveAdjust(-0.8, 14, -90, 3);
 
         // ALIGN PERPENDICULAR TO WHITE LINE
-        turnPID(180,0.6/180,0.0001,0.01,5000);
+        turnPID(180,0.8/180,0.0001,0.01,5000);
 
         // BACK UP PAST WHITE LINE
         driveAdjustShooter(0.8, dist - 12, 180, 5000, 1);
@@ -83,13 +95,13 @@ public class Red2a extends UltimateGoalLinearOpMode {
         // FIRE 1
         //startShooter(1);
         sleep(wait);
-        turnPID(-175,0.6/180,0.0001,0.01,1000);
+        turnPID(ag1,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
-        turnPID(180,0.6/180,0.0001,0.01,1000);
+        turnPID(ag2,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
-        turnPID(175,0.6/180,0.0001,0.01,1000);
+        turnPID(ag3, 0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
         shooter.setPower(0);

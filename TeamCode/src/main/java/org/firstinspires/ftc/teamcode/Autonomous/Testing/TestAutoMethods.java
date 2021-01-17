@@ -19,7 +19,10 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
 
         waitForStart();
 
-        driveAdjust(0.6, 5, 0, 2000);
+       // turnPID(15,0.7/180,0.0,0.20,5000);
+        //telemetry.addData("angle", get180Yaw());
+
+
         pos = detectStack();
 
         telemetry.addData("pos", pos);

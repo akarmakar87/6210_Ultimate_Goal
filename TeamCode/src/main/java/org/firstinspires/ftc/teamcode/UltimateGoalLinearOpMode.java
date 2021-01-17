@@ -309,8 +309,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
      */
     public int detectStack(){
 
-        if (!leftPos) // if starting position is NOT on the left, then turn left
-            turnPID(15,0.3/180,0,0.01,5000); // need to fine tune
+        //if (!leftPos) // if starting position is NOT on the left, then turn left
+            //turnPID(15,0.25/180,0,0.01,5000); // need to fine tune
 
         sleep(1000); // half a second wait time between turning and detecting
 
@@ -318,8 +318,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         telemetry.addData("numRings:", numRings);
         telemetry.update();
-        if (!leftPos) // if starting position is NOT on the left, then back straight
-            turnPID(0,0.3/180,0,0.01,5000); // need to fine tune
+        //if (!leftPos) // if starting position is NOT on the left, then back straight
+            //turnPID(0,0.25/180,0,0.01,5000); // need to fine tune
         return numRings;
     }
 
@@ -393,7 +393,12 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         error = tarAng - angle;
         mPower = error * 0.05;
 
-        if(mPower < 0){ //negative turn left
+        power[0] = -mPower;
+        power[1] = mPower;
+        power[2] = -mPower;
+        power[3] = mPower;
+
+        /*if(mPower < 0){ //negative turn left
             power[0] = mPower;
             power[1] = -mPower;
             power[2] = mPower;
@@ -405,7 +410,14 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             power[1] = mPower;
             power[2] = -mPower;
             power[3] = mPower;
-        }
+        }*/
+
+        telemetry.addData("error", error);
+        telemetry.addData("zeroang", zeroAng);
+        telemetry.addData("angle", angle);
+        telemetry.addData("before angle", get180Yaw());
+        telemetry.update();
+
 
         return scalePower(power);
     }
@@ -451,7 +463,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         // negative error = need to turn right = increase left power
 
         double total = (inches) * encoderToInches; // -2 to account for drift
-        double remaining, finalPower, error, lp, rp, m = 1.5;
+        double remaining, finalPower, error, lp, rp, m = 1.2;
         ElapsedTime t = new ElapsedTime();
         t.reset();
         resetEncoders();
@@ -464,7 +476,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             if(Math.abs(error) > 180) error = (error < 0) ? 360 + error : 360 - error;
 
-            finalPower = (remaining / total) * power;
+            finalPower = (remaining / total) * power * 1.5;
             if (finalPower != 0) finalPower = (finalPower > 0) ? Range.clip(finalPower,0.3,1) : Range.clip(finalPower,-1,-0.3);
 
             rp = finalPower;
@@ -691,7 +703,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             if(error > 180) error = (error-360);
             else  if(error < -180) error = (error+360);
 
-            if (Math.abs(error) < 30) minPower = 0.25;
+            if (Math.abs(error) < 30) minPower = 0.20;
 
             prevTime = currTime;
             currTime = t.milliseconds();
@@ -700,7 +712,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             //A (-) POWER TURNS LEFT AND A (+) TURNS RIGHT
             setMotorPowers("SIDES",-power, power,0,0);
-
             telemetry.addData("tAngle: ", tAngle)
                     .addData("currAngle: ", get180Yaw())
                     .addData("kP:", error * kP)

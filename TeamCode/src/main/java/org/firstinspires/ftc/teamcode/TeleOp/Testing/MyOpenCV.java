@@ -23,7 +23,9 @@ package org.firstinspires.ftc.teamcode.TeleOp.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -37,7 +39,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @TeleOp
-public class MyOpenCV extends LinearOpMode
+public class MyOpenCV extends UltimateGoalLinearOpMode
 {
     OpenCvInternalCamera phoneCam;
     StackDeterminationPipeline pipeline;
@@ -45,7 +47,7 @@ public class MyOpenCV extends LinearOpMode
     @Override
     public void runOpMode()
     {
-
+        init(hardwareMap, -1);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, cameraMonitorViewId); // Change to FRONT camera
         pipeline = new StackDeterminationPipeline();
@@ -71,6 +73,7 @@ public class MyOpenCV extends LinearOpMode
         {
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
+            telemetry.addData("Angle", get180Yaw());
             telemetry.update();
 
             // Don't burn CPU cycles busy-looping in this sample

@@ -25,9 +25,8 @@ public class Red1a extends UltimateGoalLinearOpMode {
         waitForStart();
 
         // DETECT # OF RINGS
-        driveAdjust(0.6, 5, 0, 2000);
         pos = detectStack();
-        pos = 1;
+        strafeAdjust(1, 9, 0, 3000);
 
         // ALIGN WITH DEPOT
         switch (pos) {
@@ -36,7 +35,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
                 wait = 1250;
                 break;
             case 1:
-                dist = 80;
+                dist = 85;
                 wait = 750;
                 break;
             case 4:
@@ -45,7 +44,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
                 break;
         }
 
-        driveAdjust(0.8, dist, 0, 5000);
+        driveAdjust(1, dist, 0, 5000);
 
         // TURN TOWARD DEPOT
         if (pos == 0 || pos == 4)
@@ -62,22 +61,22 @@ public class Red1a extends UltimateGoalLinearOpMode {
         setWobbleArm(false);
 
         // ALIGN PERPENDICULAR TO WHITE LINE
-        turnPID(180,0.6/180,0.00005,0.1,5000);
+        turnPID(180,0.8/180,0.00005,0.1,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjust(0.8, dist-12, 180, 5000);
+        driveAdjustShooter(0.8, dist-14, 180, 5000, 1);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         // turnPID(180,0.6/180,0.00005,0.1,5000);
 
         // FIRE 1
-        startShooter(1);
-        sleep(2000);
-        turnPID(-170,0.6/180,0.00005,0.1,1000);
+        turnPID(-178,0.6/180,0.00005,0.1,1000);
         setLoader(true);
         setLoader(false);
+        turnPID(-176,0.6/180,0.00005,0.1,1000);
         setLoader(true);
         setLoader(false);
+        turnPID(-174,0.6/180,0.00005,0.1,1000);
         setLoader(true);
         setLoader(false);
         shooter.setPower(0);
