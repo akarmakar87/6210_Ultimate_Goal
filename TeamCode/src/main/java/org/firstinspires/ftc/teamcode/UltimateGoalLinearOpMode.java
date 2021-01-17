@@ -49,6 +49,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     StackDeterminationPipeline pipeline;
     boolean leftPos;
 
+    double minPower = 0.3;
+
     /**
      * NOTE: It is important to make sure that no matter which method is running, if you hit the STOP button on the DS, it shouldn't throw an error.
      *       If you try this and see that the method is throwing an error, add "throws Interruptedexception" in this part of the method declaration:
@@ -210,8 +212,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         for (int i = 0; i < 4; i++){
             if (powers[i] != 0)
-                powers[i] = (powers[i] > 0) ? Range.clip(powers[i],0.3,1) : Range.clip(powers[i],-1,-0.3);
-            // figure out 0.3 or 0.2 minimum and retest PID constants
+                powers[i] = (powers[i] > 0) ? Range.clip(powers[i],minPower,1) : Range.clip(powers[i],-1,-minPower);
         }
 
         switch (type) {
@@ -621,8 +622,9 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         double power, prevError, error, dT, prevTime, currTime; //DECLARE ALL VARIABLES
 
-        error = tAngle - get180Yaw(); //INITIALIZE THESE VARIABLES
+        if (Math.abs(tAngle) < 30) minPower = 0.2;
 
+        error = tAngle - get180Yaw(); //INITIALIZE THESE VARIABLES
         currTime = 0.0;
 
         ElapsedTime t = new ElapsedTime(); //CREATE NEW TIME OBJECT
@@ -631,11 +633,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             prevError = error;
             error = tAngle - get180Yaw(); //GET ANGLE REMAINING TO TURN (tANGLE MEANS TARGET ANGLE, AS IN THE ANGLE YOU WANNA GO TO)
 
-            if(error > 180){
-                error = (error-360);
-            }else  if(error < -180){
-                error = (error+360);
-            }
+            if(error > 180) error = (error-360);
+            else  if(error < -180) error = (error+360);
 
             prevTime = currTime;
             currTime = t.milliseconds();
@@ -643,10 +642,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             power = (error * kP) + ((error) * dT * kI) + ((error - prevError)/dT * kD);
 
             //A (-) POWER TURNS LEFT AND A (+) TURNS RIGHT
-            if (power < 0)
-                setMotorPowers("SIDES",-power, power,0,0);
-            else
-                setMotorPowers("SIDES",-power, power,0,0);
+            setMotorPowers("SIDES",-power, power,0,0);
 
             telemetry.addData("tAngle: ", tAngle)
                     .addData("currAngle: ", get180Yaw())
@@ -660,6 +656,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             telemetry.update();
         }
         stopMotors();
+        minPower = 0.3;
     }
 
     //-----MANIPULATOR MECHANISM METHODS-----//

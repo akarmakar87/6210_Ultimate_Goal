@@ -12,7 +12,7 @@ public class TestPID extends UltimateGoalLinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        init(hardwareMap, 1);
+        init(hardwareMap, -1);
         initOpenCV();
 
         waitForStart();
