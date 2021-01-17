@@ -36,7 +36,7 @@ public class Red2a extends UltimateGoalLinearOpMode {
         // ALIGN WITH DEPOT
         switch (pos) {
             case 0:
-                dist = 53;
+                dist = 60;
                 wait = 1250;
                 break;
             case 1:
@@ -44,18 +44,18 @@ public class Red2a extends UltimateGoalLinearOpMode {
                 wait = 750;
                 break;
             case 4:
-                dist = 100;
+                dist = 105;
                 wait = 500;
                 break;
         }
 
-        driveAdjust(0.8, dist, 0, 5000);
+        driveAdjust(1, dist, 0, 5000);
 
         // TURN TOWARD DEPOT
 
         if (pos == 0 || pos == 4) {
             turnPID(-90, 0.8 / 180, 0.0001, 0.5, 5000);
-            driveAdjust(0.6, 14, -90, 3);
+            driveAdjust(0.8, 14, -90, 3);
         }
         else
             turnPID(-45, 0.8 / 180, 0.0001, 0.5, 5000);
@@ -68,8 +68,8 @@ public class Red2a extends UltimateGoalLinearOpMode {
         //retract arm
         setWobbleArm(false);
 
-        if (pos == 1 || pos == 3)
-            driveAdjust(-0.6, 14, -90, 3);
+        //if (pos == 1 || pos == 3)
+        //    driveAdjust(-0.8, 14, -90, 3);
 
         // ALIGN PERPENDICULAR TO WHITE LINE
         turnPID(180,0.6/180,0.0001,0.01,5000);
@@ -83,24 +83,19 @@ public class Red2a extends UltimateGoalLinearOpMode {
         // FIRE 1
         //startShooter(1);
         sleep(wait);
+        turnPID(-175,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
+        turnPID(180,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
+        turnPID(175,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
         shooter.setPower(0);
 
-        // ROTATE TO FIRE AT MIDDLE POWERSHOT
-
-        // FIRE 2
-
-        // ROTATE TO FIRE AT LEFT POWERSHOT
-
-        // FIRE 3
-
         // ALIGN PERPENDICULAR WITH WHITE LINE
-        //turnPID(0,0.6/180,0.00005,0.1,5000);
+        turnPID(180,0.6/180,0.00005,0.1,1000);
 
         // MOVE FORWARD INTO WHITE LINE
         driveAdjust(-0.8, 50, 180, 5000);

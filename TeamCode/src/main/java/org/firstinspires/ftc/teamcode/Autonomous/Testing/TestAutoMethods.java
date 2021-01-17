@@ -12,10 +12,19 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        init(hardwareMap, -1);
-        // initBitmapVuforia(); <-- remove comment if you need to use the camera
+        init(hardwareMap, 1);
+        int pos = -5;
+        initOpenCV();
+        //initBitmapVuforia();// <-- remove comment if you need to use the camera
 
         waitForStart();
+
+        driveAdjust(0.6, 5, 0, 2000);
+        pos = detectStack();
+
+        telemetry.addData("pos", pos);
+        telemetry.update();
+        sleep(5000);
 
         // write the methods that you want to test here
         //driveAdjustShooter(0.8, 45, 0, 5000, 1);
@@ -46,8 +55,5 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         sleep(10000); // <-- to allow the final telemetry info to show for a couple of seconds before exiting
          */
 
-        driveAdjust(0.6, 5, 0, 2000);
-        driveAdjust(0.6, 30, 0, 3000);
-        driveAdjust(-0.6, 30, 0, 3000);
     }
 }
