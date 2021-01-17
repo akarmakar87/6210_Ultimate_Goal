@@ -622,8 +622,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
         double power, prevError, error, dT, prevTime, currTime; //DECLARE ALL VARIABLES
 
-        if (Math.abs(tAngle) < 30) minPower = 0.2;
-
         error = tAngle - get180Yaw(); //INITIALIZE THESE VARIABLES
         currTime = 0.0;
 
@@ -635,6 +633,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
             if(error > 180) error = (error-360);
             else  if(error < -180) error = (error+360);
+
+            if (Math.abs(error) < 30) minPower = 0.25;
 
             prevTime = currTime;
             currTime = t.milliseconds();
