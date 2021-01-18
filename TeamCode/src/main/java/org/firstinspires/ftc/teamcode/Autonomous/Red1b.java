@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
-@Autonomous(name="Red 1a", group = "auto") // RED SIDE
+@Autonomous(name="Red 1b", group = "auto") // RED SIDE
 
-public class Red1a extends UltimateGoalLinearOpMode {
+public class Red1b extends UltimateGoalLinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -64,19 +64,20 @@ public class Red1a extends UltimateGoalLinearOpMode {
         turnPID(180,0.8/180,0.00005,0.1,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjustShooter(0.8, dist-14, 180, 5000, 1);
+        driveAdjustShooter(0.8, dist-20, 180, 5000, 1);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         // turnPID(180,0.6/180,0.00005,0.1,5000);
 
         // FIRE 1
-        turnPID(-178,0.6/180,0.00005,0.1,1000);
+        //turnPID(-178,0.6/180,0.00005,0.1,1000);
+        turnPID(175,0.6/180,0.00005,0.1,1000);
         setLoader(true);
         setLoader(false);
-        turnPID(-176,0.6/180,0.00005,0.1,1000);
+        //turnPID(-176,0.6/180,0.00005,0.1,1000);
         setLoader(true);
         setLoader(false);
-        turnPID(-174,0.6/180,0.00005,0.1,1000);
+        //turnPID(-174,0.6/180,0.00005,0.1,1000);
         setLoader(true);
         setLoader(false);
         shooter.setPower(0);
@@ -90,7 +91,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
         // FIRE 3
 
         // ALIGN PERPENDICULAR WITH WHITE LINE
-        //turnPID(0,0.6/180,0.00005,0.1,5000);
+        turnPID(-170,0.6/180,0.00005,0.1,5000);
 
         // MOVE FORWARD INTO WHITE LINE
 

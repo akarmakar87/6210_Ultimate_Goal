@@ -12,7 +12,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        final double STICK_THRESHHOLD = 0.05;
+        final double STICK_THRESHHOLD = 0.01;
         final double STICK_SCALE = 7;
         final double POWER_CAP = 1.0;
         double shooterPower = 0;
@@ -83,10 +83,10 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Intake
 
             if(gamepad1.right_bumper){
-                intake.setPower(-0.80);
+                intake.setPower(-0.83);
             }
             else if(gamepad1.left_bumper){
-                intake.setPower(0.80);
+                intake.setPower(0.83);
             }
             else{
                 intake.setPower(0);
@@ -94,11 +94,11 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             // Output
 
-            if(gamepad1.right_trigger > 0.05){
-                shooter.setPower(gamepad1.right_trigger);
+            if(gamepad2.right_trigger > 0.05){
+                shooter.setPower(gamepad2.right_trigger);
             }
-            else if(gamepad1.left_trigger > 0.05){
-                shooter.setPower(-gamepad1.left_trigger);
+            else if(gamepad2.left_trigger > 0.05){
+                shooter.setPower(-gamepad2.left_trigger);
             }
             else{
                 shooter.setPower(0);
@@ -107,11 +107,11 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             //Loader
 
             //Deployed
-            if(gamepad1.a){
+            if(gamepad2.a){
                 loader.setPosition(0);
             }
             //Retracted
-            if(gamepad1.b){
+            if(gamepad2.b){
                 loader.setPosition(1);
             }
 
@@ -121,23 +121,23 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             else
                 wobbleArm.setPower(0);
 
-            if(gamepad2.a)
+            if(gamepad2.x)
                 setWobbleClaw(true);
-            if(gamepad2.b)
+            if(gamepad2.y)
                 setWobbleClaw(false);
 
-            if (prevTime + 1000 <= time.milliseconds()){
+            /*if (prevTime + 1000 <= time.milliseconds()){
                 prevTime = time.milliseconds();
                 speed = shooter.getCurrentPosition() - lastEncoder;
                 lastEncoder = shooter.getCurrentPosition();
-            }
+            }*/
 
             telemetry.addData("shooterPower:", shooterPower);
             telemetry.addData("shooter encoders:", shooter.getCurrentPosition());
             telemetry.addData("time:", time.milliseconds());
             telemetry.addData("encoders per second", speed);
             telemetry.addData("wobbleArm", wobbleArm.getCurrentPosition());
-            //telemetry.update();
+            telemetry.update();
 
         }
     }

@@ -350,7 +350,8 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         motorPower[2] = leftY - leftX + rightX;
         motorPower[3] = leftY + leftX - rightX;
 
-        return scalePower(motorPower);
+        //return scalePower(motorPower);
+        return motorPower;
     }
 
     /**
