@@ -13,12 +13,12 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         final double STICK_THRESHHOLD = 0.01;
-        final double STICK_SCALE = 7;
-        final double POWER_CAP = 1.0;
         double shooterPower = 0;
         double[] motorP = {0.0, 0.0, 0.0, 0.0};
         double zeroAng = 0;
         boolean halfspeed = false;
+        boolean wobbleBool = true;
+        boolean loaderBool = true;
 
         ElapsedTime time = new ElapsedTime();
         time.reset();
@@ -27,7 +27,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         int speed = 0;
 
         //sets up imu and inits all motors
-        init(hardwareMap, 0);
+        init(hardwareMap, 1);
 
         int lastEncoder = shooter.getCurrentPosition();
 
@@ -40,9 +40,14 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         while (opModeIsActive()) {
 
             // Reset angle (0 to 360 angle)
-            if (gamepad1.a){
+            if (isPressed("1a", gamepad1.a)){
                 zeroAng = get180Yaw();
                 if (zeroAng < 0) zeroAng += 360;
+            }
+
+            // Half time toggle
+            if (isPressed("1x", gamepad1.x)){
+                halfspeed = !halfspeed;
             }
 
             // Movement
@@ -61,6 +66,11 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             }
 
+            //TOWARDS GOAL
+            else if(gamepad1.dpad_up){
+                motorP = autoTurn(zeroAng, 0);
+            }
+            //TOWARDS BACK
             else if (gamepad1.dpad_down){
                 motorP = autoTurn(zeroAng, 180);
             }
@@ -75,13 +85,9 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             //SET MOTOR POWERS
-            LF.setPower(Range.clip(motorP[0], -POWER_CAP, POWER_CAP));
-            RF.setPower(Range.clip(motorP[1], -POWER_CAP, POWER_CAP));
-            LB.setPower(Range.clip(motorP[2], -POWER_CAP, POWER_CAP));
-            RB.setPower(Range.clip(motorP[3], -POWER_CAP, POWER_CAP));
+            setEachPower(motorP, halfspeed);
 
             // Intake
-
             if(gamepad1.right_bumper){
                 intake.setPower(-0.83);
             }
@@ -104,16 +110,23 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
                 shooter.setPower(0);
             }
 
-            //Loader
+            //Loader toggle
+            if(isPressed("2a", gamepad2.a)){
+                loaderBool = !loaderBool;
+            }
 
-            //Deployed
-            if(gamepad2.a){
-                loader.setPosition(0);
-            }
+            //Depoloyed
+            if (loaderBool) loader.setPosition(1);
             //Retracted
-            if(gamepad2.b){
-                loader.setPosition(1);
+            else loader.setPosition(0);
+
+            //Wobble claw toggle
+            if(isPressed("2x", gamepad2.x)){
+                wobbleBool = !wobbleBool;
             }
+
+            //Opened
+            setWobbleClaw(wobbleBool);
 
             // Arm
             if(Math.abs(gamepad2.right_stick_y) > 0.05)
@@ -121,22 +134,16 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             else
                 wobbleArm.setPower(0);
 
-            if(gamepad2.x)
-                setWobbleClaw(true);
-            if(gamepad2.y)
-                setWobbleClaw(false);
-
-            /*if (prevTime + 1000 <= time.milliseconds()){
+            if (prevTime + 1000 <= time.milliseconds()){
                 prevTime = time.milliseconds();
                 speed = shooter.getCurrentPosition() - lastEncoder;
                 lastEncoder = shooter.getCurrentPosition();
-            }*/
+            }
 
-            telemetry.addData("shooterPower:", shooterPower);
-            telemetry.addData("shooter encoders:", shooter.getCurrentPosition());
-            telemetry.addData("time:", time.milliseconds());
             telemetry.addData("encoders per second", speed);
             telemetry.addData("wobbleArm", wobbleArm.getCurrentPosition());
+            telemetry.addData("angle", get180Yaw());
+            telemetry.addData("Halfspeed (X)", halfspeed);
             telemetry.update();
 
         }

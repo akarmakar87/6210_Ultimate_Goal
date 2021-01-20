@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import java.util.HashMap;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,6 +52,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     boolean leftPos;
 
     double minPower = 0.3;
+
+    //-----TELE-OP TOGGLE VARIABLES-----//
+    public HashMap<String, Boolean> buttons = new HashMap<String, Boolean>();
+
 
     /**
      * NOTE: It is important to make sure that no matter which method is running, if you hit the STOP button on the DS, it shouldn't throw an error.
@@ -158,6 +164,31 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     }
 
     //-----UTILITY METHODS-----//
+
+    /**
+     * PURPOSE: HashMap with booleans to make sure toggle buttons actually toggle
+     * @param name: unique string for button
+     * @param button: boolean button from gamepad
+     * @return boolean to toggle on or off
+     */
+
+    public boolean isPressed(String name, boolean button){
+        boolean output = false;
+
+        //If the hashmap doesn't already contain the key
+        if (!buttons.containsKey(name)){
+            buttons.put(name, false);
+        }
+
+        boolean buttonWas = buttons.get(name);
+        if (button != buttonWas && button == true){
+            output = true;
+        }
+
+        buttons.put(name, button);
+
+        return output;
+    }
 
     /**
      * PURPOSE: Reset all drivetrain encoders
@@ -350,8 +381,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         motorPower[2] = leftY - leftX + rightX;
         motorPower[3] = leftY + leftX - rightX;
 
-        //return scalePower(motorPower);
-        return motorPower;
+        return scalePower(motorPower);
     }
 
     /**
@@ -367,12 +397,32 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             if (p > max) max = p;
         }
 
-        //Scale powers from max
-        for (int i = 0; i < power.length; i++){
-            power[i] /= max;
+        if (max > 1){
+            //Scale powers from max
+            for (int i = 0; i < power.length; i++){
+                power[i] /= max;
+            }
         }
 
         return power;
+    }
+
+    /**
+     * PURPOSE: Set motor powers
+     * @param powers - motor powers array [LF, RF, LB, RB]
+     * @param halfspeed - set motors at half the power
+     */
+    public void setEachPower(double[] powers, boolean halfspeed){
+        if (halfspeed){
+            for (int i = 0; i < powers.length; i++){
+                powers[i] = powers[i]/2;
+            }
+        }
+
+        LF.setPower(Range.clip(powers[0], -1, 1));
+        RF.setPower(Range.clip(powers[1], -1, 1));
+        LB.setPower(Range.clip(powers[2], -1, 1));
+        RB.setPower(Range.clip(powers[3], -1, 1));
     }
 
     /**
@@ -385,6 +435,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         double[] power = {0.0, 0.0, 0.0, 0.0};
         double angle = get180Yaw();
         double error, mPower = 0;
+
+        //Change this coefficient if you want the turn to have less waggle but be slower
+        final double COEFFICIENT = 0.015;
+
         //Find angle
         angle -= zeroAng;
         if (angle < -180){
@@ -392,32 +446,24 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
 
         error = tarAng - angle;
-        mPower = error * 0.05;
+
+        //If it needs to turn right
+        if (error > 180) {
+            error = tarAng - Math.abs(angle);
+            error *= -1;
+        }
+        mPower = error * COEFFICIENT;
 
         power[0] = -mPower;
         power[1] = mPower;
         power[2] = -mPower;
         power[3] = mPower;
 
-        /*if(mPower < 0){ //negative turn left
-            power[0] = mPower;
-            power[1] = -mPower;
-            power[2] = mPower;
-            power[3] = -mPower;
-
-
-        }else{ //positive turn right
-            power[0] = -mPower;
-            power[1] = mPower;
-            power[2] = -mPower;
-            power[3] = mPower;
-        }*/
 
         telemetry.addData("error", error);
         telemetry.addData("zeroang", zeroAng);
         telemetry.addData("angle", angle);
         telemetry.addData("before angle", get180Yaw());
-        telemetry.update();
 
 
         return scalePower(power);
