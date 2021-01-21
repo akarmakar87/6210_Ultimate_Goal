@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -17,13 +18,18 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         double[] motorP = {0.0, 0.0, 0.0, 0.0};
         double zeroAng = 0;
         boolean halfspeed = false;
+        boolean deployArm = false;
         boolean wobbleBool = true;
         boolean loaderBool = true;
+        int lowestArm = 0;
+        final int IN_VALUE = 30;
+        final int OUT_VALUE = 125;
 
         ElapsedTime time = new ElapsedTime();
         time.reset();
 
         double prevTime = -1000;
+        double armTime = -1000;
         int speed = 0;
 
         //sets up imu and inits all motors
@@ -111,9 +117,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             //Loader toggle
-            if(isPressed("2a", gamepad2.a)){
-                loaderBool = !loaderBool;
-            }
+            if(isPressed("2a", gamepad2.a)) loaderBool = !loaderBool;
 
             //Depoloyed
             if (loaderBool) loader.setPosition(1);
@@ -121,18 +125,36 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             else loader.setPosition(0);
 
             //Wobble claw toggle
-            if(isPressed("2x", gamepad2.x)){
-                wobbleBool = !wobbleBool;
-            }
+            if(isPressed("2x", gamepad2.x)) wobbleBool = !wobbleBool;
 
             //Opened
             setWobbleClaw(wobbleBool);
 
             // Arm
-            if(Math.abs(gamepad2.right_stick_y) > 0.05)
+            if (isPressed("2b", gamepad2.b)) {
+                deployArm = true;
+                if (wobbleArm.getCurrentPosition() >= lowestArm + 75)  wobbleArm.setTargetPosition(lowestArm + IN_VALUE);
+                else wobbleArm.setTargetPosition(lowestArm + OUT_VALUE);
+                armTime = time.milliseconds();
+            }
+
+            if (deployArm) {
+                wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wobbleArm.setPower(1);
+            }else{
+                wobbleArm.setPower(0);
+            }
+
+            if ( (wobbleArm.getCurrentPosition() >= lowestArm + OUT_VALUE || wobbleArm.getCurrentPosition() <= lowestArm + IN_VALUE) && armTime + 1500 <= time.milliseconds()){
+                deployArm = false;
+            }
+
+            if (wobbleArm.getCurrentPosition() < lowestArm) lowestArm = wobbleArm.getCurrentPosition();
+
+            /*if(Math.abs(gamepad2.right_stick_y) > 0.05)
                 wobbleArm.setPower(gamepad2.right_stick_y*-0.75);
             else
-                wobbleArm.setPower(0);
+                wobbleArm.setPower(0);*/
 
             if (prevTime + 1000 <= time.milliseconds()){
                 prevTime = time.milliseconds();
@@ -144,6 +166,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             telemetry.addData("wobbleArm", wobbleArm.getCurrentPosition());
             telemetry.addData("angle", get180Yaw());
             telemetry.addData("Halfspeed (X)", halfspeed);
+            telemetry.addData("arm", deployArm);
             telemetry.update();
 
         }
