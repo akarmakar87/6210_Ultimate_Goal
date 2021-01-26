@@ -21,9 +21,14 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         boolean deployArm = false;
         boolean wobbleBool = true;
         boolean loaderBool = true;
+        boolean incrementTurn = false;
+        boolean field = false;
+
         int lowestArm = 0;
+        double turnAngle = 0;
         final int IN_VALUE = 30;
         final int OUT_VALUE = 125;
+        final int INCREMENT = 8;
 
         ElapsedTime time = new ElapsedTime();
         time.reset();
@@ -37,13 +42,27 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
         int lastEncoder = shooter.getCurrentPosition();
 
-
         telemetry.addData("teleop:", "waiting for start");
         telemetry.update();
 
         waitForStart();
 
         while (opModeIsActive()) {
+
+            /**
+             * GAMEPAD 1
+             *
+             * Controls:
+             * Right Joystick - Robot Movement (Arcade Drive)
+             * Left Joystick - Robot Orientation
+             * Right Bumper - Intake in , Left Bumper - Intake out
+             * X - Half Speed
+             * Y - Switch Drive Modes (Robot Oriented or Field Oriented)
+             * A - Reset Gyro
+             * DPAD: LEFT / RIGHT - increment left / increment right
+             * DPAD: UP / DOWN - toward goal / back field
+             *
+             */
 
             // Reset angle (0 to 360 angle)
             if (isPressed("1a", gamepad1.a)){
@@ -56,6 +75,26 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
                 halfspeed = !halfspeed;
             }
 
+            // Drive mode toggle
+            if (isPressed("1y", gamepad1.y)){
+                field = !field;
+            }
+
+            // Turn increments
+            if (isPressed("1dl", gamepad1.dpad_left)){
+                incrementTurn = true;
+                turnAngle = get180Yaw() + INCREMENT;
+            }
+
+            if (isPressed("1dr", gamepad1.dpad_right)){
+                incrementTurn = true;
+                turnAngle = get180Yaw() - INCREMENT;
+            }
+
+            if (incrementTurn && Math.abs(get180Yaw() - turnAngle) <= 1){
+                incrementTurn = false;
+            }
+
             // Movement
             double yAxis, xAxis, zAxis;
 
@@ -64,21 +103,28 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             xAxis = gamepad1.left_stick_x;
             zAxis = gamepad1.right_stick_x * 0.75;
 
+            //MOTOR POWERs
+
             if (Math.abs(gamepad1.left_stick_x) > STICK_THRESHHOLD ||
                     Math.abs(gamepad1.left_stick_y) > STICK_THRESHHOLD ||
                     Math.abs(gamepad1.right_stick_x) > STICK_THRESHHOLD) {
 
-                motorP = holonomicDrive(yAxis, xAxis, zAxis);
+                if (!field) motorP = holonomicDrive(yAxis, xAxis, zAxis);
+                else motorP = fieldOriented(yAxis, xAxis, zAxis, zeroAng);
 
             }
 
             //TOWARDS GOAL
             else if(gamepad1.dpad_up){
-                motorP = autoTurn(zeroAng, 0);
+                motorP = autoTurn(zeroAng, 0, 0.025);
             }
             //TOWARDS BACK
             else if (gamepad1.dpad_down){
-                motorP = autoTurn(zeroAng, 180);
+                motorP = autoTurn(zeroAng, 180, 0.025);
+            }
+
+            else if (incrementTurn){
+                motorP = autoTurn(0, turnAngle, 0.03);
             }
 
             else {
@@ -103,6 +149,16 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             else{
                 intake.setPower(0);
             }
+
+            /**
+             * GAMEPAD 2
+             *
+             * Controls:
+             * Left Trigger - Shooter in ,  Right Trigger - Shooter out
+             * B - Auto arm deploy , X - Wobble claw in/out , A - Loader in/out
+             *
+             */
+
 
             // Output
 
@@ -162,11 +218,12 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
                 lastEncoder = shooter.getCurrentPosition();
             }
 
-            telemetry.addData("encoders per second", speed);
-            telemetry.addData("wobbleArm", wobbleArm.getCurrentPosition());
-            telemetry.addData("angle", get180Yaw());
-            telemetry.addData("Halfspeed (X)", halfspeed);
-            telemetry.addData("arm", deployArm);
+            telemetry.addData("Halfspeed (X) : ", halfspeed);
+            telemetry.addData("Drive Mode (Y) : ", field ? "Field Oriented" : "Robot Oriented");
+            telemetry.addData("Loader (A) : ", loaderBool ? "IN" : "OUT");
+            telemetry.addData("Wobble Claw (X) : ", wobbleBool ? "IN" : "OUT" );
+            telemetry.addData("Shooter Speed (encoders per second) : ", speed);
+            telemetry.addData("Angle : ", get180Yaw());
             telemetry.update();
 
         }

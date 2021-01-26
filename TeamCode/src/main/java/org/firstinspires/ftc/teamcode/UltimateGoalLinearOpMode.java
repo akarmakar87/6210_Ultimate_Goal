@@ -385,6 +385,41 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     }
 
     /**
+     * PURPOSE: Implement field oriented holonomic drive (arcade) with using trig. Movement is based on cardinal directions (ex: forward is always toward goal no matter orientation)
+     * @param leftY - Left joystick y
+     * @param leftX - Left joystick x
+     * @param rightX - Right joystick x
+     * @return motor powers array [LF, RF, LB, RB]
+     */
+    public double[] fieldOriented(double leftX, double leftY, double rightX, double zeroAng){
+        double[] motorPower = new double[4];
+        double zAngle = get180Yaw();
+
+        double magnitude = Math.hypot(leftX, leftY); //How fast it goes (slight push is slow etc)
+
+        zAngle -= zeroAng;
+        if (zAngle < -180){
+            zAngle += 360;
+        }
+
+        leftY *= -1;
+        leftX *= -1;
+
+        double angle = Math.atan2(leftY, leftX) + Math.toRadians(zAngle) - Math.PI / 2; //Angle the joystick is turned in
+        double rotation = rightX;
+
+        motorPower[0] = magnitude * Math.sin(angle - Math.PI / 4) + rotation; //Left front motor
+        motorPower[1] = magnitude * Math.sin(angle + Math.PI / 4) - rotation; //Right front motor
+        motorPower[2] = magnitude * Math.sin(angle + Math.PI / 4) + rotation; //Left back motor
+        motorPower[3] = magnitude * Math.sin(angle - Math.PI / 4) - rotation; //Right back motor
+
+        motorPower = scalePower(motorPower);
+
+        return motorPower;
+
+    }
+
+    /**
      * PURPOSE: Scale powers to the correct proportional ratios when powers are greater than 1
      * @param power - motor powers array [LF, RF, LB, RB]
      * @return corrected motor powers array [LF, RF, LB, RB]
@@ -429,15 +464,16 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
      * PURPOSE: Proportional autoturn to target angle
      * @param zeroAng - 0 to 360 reset angle
      * @param tarAng - target orientation robot should turn to (-180 to 180 angle)
+     * @param coefficient - how fast the robot turns proportionally
      * @return motor powers array [LF, RF, LB, RB]
      */
-    public double[] autoTurn(double zeroAng, double tarAng){
+    public double[] autoTurn(double zeroAng, double tarAng, double coefficient){
         double[] power = {0.0, 0.0, 0.0, 0.0};
         double angle = get180Yaw();
         double error, mPower = 0;
 
         //Change this coefficient if you want the turn to have less waggle but be slower
-        final double COEFFICIENT = 0.015;
+        //double coefficient = 0.015;
 
         //Find angle
         angle -= zeroAng;
@@ -452,19 +488,17 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             error = tarAng - Math.abs(angle);
             error *= -1;
         }
-        mPower = error * COEFFICIENT;
+        mPower = error * coefficient;
 
         power[0] = -mPower;
         power[1] = mPower;
         power[2] = -mPower;
         power[3] = mPower;
 
-
-        telemetry.addData("error", error);
+        /*telemetry.addData("error", error);
         telemetry.addData("zeroang", zeroAng);
         telemetry.addData("angle", angle);
-        telemetry.addData("before angle", get180Yaw());
-
+        telemetry.addData("before angle", get180Yaw());*/
 
         return scalePower(power);
     }
