@@ -13,8 +13,8 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         init(hardwareMap, 1);
-        int pos = -5;
-        initOpenCV();
+        //int pos = -5;
+        //initOpenCV();
         //initBitmapVuforia();// <-- remove comment if you need to use the camera
 
         waitForStart();
@@ -23,10 +23,9 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         //telemetry.addData("angle", get180Yaw());
 
 
-        pos = detectStack();
-
-        telemetry.addData("pos", pos);
-        telemetry.update();
+        strafeAdjust(1, 24, 0, 4000);
+        sleep(1000);
+        strafeAdjust(-1, 24, 0, 4000);
         sleep(5000);
 
         // write the methods that you want to test here

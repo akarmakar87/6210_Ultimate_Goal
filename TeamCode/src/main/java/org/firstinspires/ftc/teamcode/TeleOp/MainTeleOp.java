@@ -23,6 +23,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         boolean loaderBool = true;
         boolean incrementTurn = false;
         boolean field = false;
+        boolean manuel = true;
 
         int lowestArm = 0;
         double turnAngle = 0;
@@ -189,6 +190,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Arm
             if (isPressed("2b", gamepad2.b)) {
                 deployArm = true;
+                manuel = false;
                 if (wobbleArm.getCurrentPosition() >= lowestArm + 75)  wobbleArm.setTargetPosition(lowestArm + IN_VALUE);
                 else wobbleArm.setTargetPosition(lowestArm + OUT_VALUE);
                 armTime = time.milliseconds();
@@ -197,7 +199,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             if (deployArm) {
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wobbleArm.setPower(1);
-            }else{
+            }else if (!manuel){
                 wobbleArm.setPower(0);
             }
 
@@ -207,10 +209,14 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             if (wobbleArm.getCurrentPosition() < lowestArm) lowestArm = wobbleArm.getCurrentPosition();
 
-            /*if(Math.abs(gamepad2.right_stick_y) > 0.05)
+            if(Math.abs(gamepad2.right_stick_y) > 0.05 ){
+                deployArm = false;
+                manuel = true;
+                wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 wobbleArm.setPower(gamepad2.right_stick_y*-0.75);
+            }
             else
-                wobbleArm.setPower(0);*/
+                wobbleArm.setPower(0);
 
             if (prevTime + 1000 <= time.milliseconds()){
                 prevTime = time.milliseconds();
@@ -224,6 +230,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             telemetry.addData("Wobble Claw (X) : ", wobbleBool ? "IN" : "OUT" );
             telemetry.addData("Shooter Speed (encoders per second) : ", speed);
             telemetry.addData("Angle : ", get180Yaw());
+            telemetry.addData("Arm angle: ", wobbleArm.getCurrentPosition());
             telemetry.update();
 
         }
