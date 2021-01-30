@@ -26,7 +26,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
 
         // DETECT # OF RINGS
         pos = detectStack();
-        strafeAdjust(1, 9, 0, 3000);
+        strafeAdjust(1, 12, 0, 3000);
 
         // ALIGN WITH DEPOT
         switch (pos) {
@@ -39,7 +39,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
                 wait = 750;
                 break;
             case 4:
-                dist = 100;
+                dist = 105;
                 wait = 500;
                 break;
         }
@@ -64,13 +64,14 @@ public class Red1a extends UltimateGoalLinearOpMode {
         turnPID(180,0.8/180,0.00005,0.1,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjustShooter(0.8, dist-14, 180, 5000, 1);
+        driveAdjustShooter(0.8, dist-28, 180, 5000, 1);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         // turnPID(180,0.6/180,0.00005,0.1,5000);
 
         // FIRE 1
         turnPID(-178,0.6/180,0.00005,0.1,1000);
+        sleep(1000);
         setLoader(true);
         setLoader(false);
         turnPID(-176,0.6/180,0.00005,0.1,1000);
@@ -94,7 +95,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
 
         // MOVE FORWARD INTO WHITE LINE
 
-        driveAdjust(-1, 53, -170, 5000);
+        driveAdjust(-1, 45, -170, 5000);
 
 
         telemetry.addData("auto:", "complete");

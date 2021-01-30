@@ -23,10 +23,11 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
         //telemetry.addData("angle", get180Yaw());
 
 
-        strafeAdjust(1, 24, 0, 4000);
+        setWobbleArm(true);
+        setWobbleArm(false);
+        setWobbleArm(true);
+        setWobbleArm(false);
         sleep(1000);
-        strafeAdjust(-1, 24, 0, 4000);
-        sleep(5000);
 
         // write the methods that you want to test here
         //driveAdjustShooter(0.8, 45, 0, 5000, 1);

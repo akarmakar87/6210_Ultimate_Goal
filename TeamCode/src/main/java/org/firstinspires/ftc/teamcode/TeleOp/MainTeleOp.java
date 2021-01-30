@@ -39,7 +39,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         int speed = 0;
 
         //sets up imu and inits all motors
-        init(hardwareMap, 1);
+        init(hardwareMap, 0);
 
         int lastEncoder = shooter.getCurrentPosition();
 
@@ -188,7 +188,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             setWobbleClaw(wobbleBool);
 
             // Arm
-            if (isPressed("2b", gamepad2.b)) {
+            /*if (isPressed("2b", gamepad2.b)) {
                 deployArm = true;
                 manuel = false;
                 if (wobbleArm.getCurrentPosition() >= lowestArm + 75)  wobbleArm.setTargetPosition(lowestArm + IN_VALUE);
@@ -207,7 +207,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
                 deployArm = false;
             }
 
-            if (wobbleArm.getCurrentPosition() < lowestArm) lowestArm = wobbleArm.getCurrentPosition();
+            if (wobbleArm.getCurrentPosition() < lowestArm) lowestArm = wobbleArm.getCurrentPosition();*/
 
             if(Math.abs(gamepad2.right_stick_y) > 0.05 ){
                 deployArm = false;

@@ -53,7 +53,7 @@ public class Red2a extends UltimateGoalLinearOpMode {
                 ag3 = 171;
                 break;
             case 4:
-                dist = 105;
+                dist = 110;
                 wait = 500;
                 ag1 = -175;
                 ag2 = -179;
@@ -67,7 +67,7 @@ public class Red2a extends UltimateGoalLinearOpMode {
 
         if (pos == 0 || pos == 4) {
             turnPID(-90, 0.8 / 180, 0.0001, 0.5, 5000);
-            driveAdjust(0.8, 14, -90, 3);
+            driveAdjust(0.8, 22, -90, 3);
         }
         else
             turnPID(-45, 0.8 / 180, 0.0001, 0.5, 5000);
@@ -87,7 +87,7 @@ public class Red2a extends UltimateGoalLinearOpMode {
         turnPID(180,0.8/180,0.0001,0.01,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjustShooter(0.8, dist - 12, 180, 5000, 1);
+        driveAdjustShooter(0.8, dist - 27, 180, 5000, 1);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         //turnPID(180,0.8/180,0.0001,0.01,5000);
@@ -110,7 +110,7 @@ public class Red2a extends UltimateGoalLinearOpMode {
         turnPID(180,0.6/180,0.00005,0.1,1000);
 
         // MOVE FORWARD INTO WHITE LINE
-        driveAdjust(-0.8, 50, 180, 5000);
+        driveAdjust(-0.8, 35, 180, 5000);
 
         telemetry.addData("auto:", "complete");
         telemetry.update();

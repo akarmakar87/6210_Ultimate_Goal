@@ -109,9 +109,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         resetEncoders();
 
         // Make sure loader is retracted
-        setLoader(false);
+
 
         if (auto != 0) {
+            setLoader(false);
             setWobbleClaw(true);
             BNO055IMU.Parameters bparameters = new BNO055IMU.Parameters();
             bparameters.mode = BNO055IMU.SensorMode.IMU;
