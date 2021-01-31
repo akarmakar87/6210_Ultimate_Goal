@@ -69,7 +69,7 @@ public class Red1a extends UltimateGoalLinearOpMode {
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         // turnPID(180,0.6/180,0.00005,0.1,5000);
 
-        // FIRE 1
+        // FIRE
         turnPID(-178,0.6/180,0.00005,0.1,1000);
         sleep(1000);
         setLoader(true);
@@ -82,19 +82,9 @@ public class Red1a extends UltimateGoalLinearOpMode {
         setLoader(false);
         shooter.setPower(0);
 
-        // ROTATE TO FIRE AT MIDDLE POWERSHOT
 
-        // FIRE 2
 
-        // ROTATE TO FIRE AT LEFT POWERSHOT
-
-        // FIRE 3
-
-        // ALIGN PERPENDICULAR WITH WHITE LINE
-        //turnPID(0,0.6/180,0.00005,0.1,5000);
-
-        // MOVE FORWARD INTO WHITE LINE
-
+        // MOVE FORWARD INTO WHITE LINE\
         driveAdjust(-1, 45, -170, 5000);
 
 
