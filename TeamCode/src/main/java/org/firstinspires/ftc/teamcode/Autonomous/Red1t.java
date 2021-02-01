@@ -36,21 +36,21 @@ public class Red1t extends UltimateGoalLinearOpMode {
         // Set values based on # of rings
         switch (pos) {
             case 0:
-                dist = 60;
+                dist = 50;
                 angle = -15;
                 break;
             case 1:
-                dist = 90;
+                dist = 72;
                 angle = 3;
                 break;
             case 4:
-                dist = 120;
+                dist = 96;
                 angle = -5;
                 break;
         }
 
         // Enter central position
-        driveAdjust(0.8, 24, 0, 5000);
+        driveAdjust(0.8, 22, 0, 5000);
 
         //Drive to designated depot
         turnPID(angle,0.8/180,0.0001,0.5,5000);
@@ -63,9 +63,6 @@ public class Red1t extends UltimateGoalLinearOpMode {
 
         // Return to central position
         driveAdjustShooter(0.8, dist, angle, 5000, 1);
-
-        // Rotate to fire
-        turnPID(180,0.8/180,0.00005,0.1,5000);
 
         // Fire rings at powershots
         turnPID(-178,0.6/180,0.00005,0.1,1000);
@@ -83,10 +80,10 @@ public class Red1t extends UltimateGoalLinearOpMode {
         // Retrieve wobble 2
         turnPID(90,0.6/180,0.00005,0.1,1000);
         setWobbleArm(true);
-        driveAdjust(0.8, 15, 180, 2000);
+        driveAdjust(0.8, 24, 90, 2000);
         setWobbleClaw(true);
-        setWobbleArm(false);
-        driveAdjust(-0.8, 15, 180, 2000);
+        setWobbleArm(false);        //This may not be necessary if we encounter issues bringing the wobble back into the robot. We could just drag and push the wobble.
+        driveAdjust(-0.8, 24, 90, 2000);
 
         //Drive to designated depot
         turnPID(angle,0.8/180,0.0001,0.5,5000);
