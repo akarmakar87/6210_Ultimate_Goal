@@ -26,7 +26,10 @@ public class Red1t extends UltimateGoalLinearOpMode {
         initOpenCV();
 
         int pos, dist = 0;
+        int wdist = 0;
         int angle = 0;
+        int angleAdjust = 0;
+        int wangle = 105;
         waitForStart();
 
         // Detect rings
@@ -38,14 +41,22 @@ public class Red1t extends UltimateGoalLinearOpMode {
             case 0:
                 dist = 38;
                 angle = -30;
+                wdist = 4;
+                wangle = 115;
+                angleAdjust = 5;
                 break;
             case 1:
-                dist = 65;
-                angle = 0;
+                dist = 64;
+                angle = 3;
+                wdist = 16;
+                strafeAdjust(1, 12, 0, 3000);
                 break;
             case 4:
-                dist = 96;
-                angle = -15;
+                dist = 90;
+                angle = -4;
+                wdist = 16;
+                angleAdjust = 5;
+                strafeAdjust(1, 12, 0, 3000);
                 break;
         }
 
@@ -54,7 +65,7 @@ public class Red1t extends UltimateGoalLinearOpMode {
 
         //Drive to designated depot
         turnPID(angle,0.8/180,0.0001,0.5,5000);
-        driveAdjust(0.9, dist+2, angle, 5000);
+        driveAdjust(1, dist+2, angle, 5000);
 
         // Release wobble
         setWobbleArm(true);
@@ -66,7 +77,10 @@ public class Red1t extends UltimateGoalLinearOpMode {
         setWobbleClaw(true);
 
         // Fire rings at powershots
-        turnPID(170,0.6/180,0.00005,0.1,3000);
+        if (pos == 0)
+            turnPID(170,0.6/180,0.00005,0.1,3000);
+        else
+            turnPID(175,0.6/180,0.00005,0.1,3000);
         wobbleArm.setPower(0);
         sleep(1000);
         setLoader(true);
@@ -86,18 +100,18 @@ public class Red1t extends UltimateGoalLinearOpMode {
 
         // Retrieve wobble 2
         setWobbleClaw(false);
-        turnPID(115,0.8/180,0.00005,0.1,2500);
+        turnPID(wangle,0.8/180,0.00005,0.1,2500);
         setWobbleArm(true);
-        driveAdjust(0.5, 4, 115, 2000);
+        driveAdjust(0.5, wdist, wangle, 2000);
         setWobbleClaw(true);
         sleep(750);
         setWobbleArm(false);        //This may not be necessary if we encounter issues bringing the wobble back into the robot. We could just drag and push the wobble.
-        sleep(1000);
-        driveAdjust(-0.5, 4, 115, 2000);
+        sleep(750);
+        driveAdjust(-0.5, wdist, wangle, 2000);
 
         //Drive to designated depot
-        turnPID(angle+5,0.8/180,0.0001,0.5,5000);
-        driveAdjust(1, dist-10, angle+5, 5000);
+        turnPID(angle+angleAdjust,0.8/180,0.0001,0.5,5000);
+        driveAdjust(1, dist-13, angle+angleAdjust, 5000);
 
         // Release wobble 2
         setWobbleArm(true);
@@ -113,7 +127,10 @@ public class Red1t extends UltimateGoalLinearOpMode {
                 turnPID(35,1/180,0.0001,0.5,2500);
                 driveAdjust(1, 30, 10, 2000);
                 break;
-            case 4:
+            case 1:
+                driveAdjust(-1, 10, 0, 2000);
+                break;
+             case 4:
                 turnPID(0,0.8/180,0.0001,0.5,2000);
                 driveAdjust(-1, 50, 0, 2500);
                 break;
