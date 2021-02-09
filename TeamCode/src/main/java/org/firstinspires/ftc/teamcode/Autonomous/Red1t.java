@@ -31,30 +31,30 @@ public class Red1t extends UltimateGoalLinearOpMode {
 
         // Detect rings
         pos = detectStack();
-        strafeAdjust(1, 12, 0, 3000);
+        //strafeAdjust(1, 12, 0, 3000);
 
         // Set values based on # of rings
         switch (pos) {
             case 0:
-                dist = 50;
-                angle = -15;
+                dist = 38;
+                angle = -30;
                 break;
             case 1:
-                dist = 72;
-                angle = 3;
+                dist = 65;
+                angle = 0;
                 break;
             case 4:
                 dist = 96;
-                angle = -5;
+                angle = -15;
                 break;
         }
 
         // Enter central position
-        driveAdjust(0.8, 22, 0, 5000);
+        driveAdjust(1, 18, 0, 5000);
 
         //Drive to designated depot
         turnPID(angle,0.8/180,0.0001,0.5,5000);
-        driveAdjust(1, dist, angle, 5000);
+        driveAdjust(0.9, dist+2, angle, 5000);
 
         // Release wobble
         setWobbleArm(true);
@@ -62,53 +62,64 @@ public class Red1t extends UltimateGoalLinearOpMode {
         setWobbleArm(false);
 
         // Return to central position
-        driveAdjustShooter(0.8, dist, angle, 5000, 1);
+        driveAdjustShooter(-1, dist-6, angle, 5000, 0.95);
+        setWobbleClaw(true);
 
         // Fire rings at powershots
-        turnPID(-178,0.6/180,0.00005,0.1,1000);
+        turnPID(170,0.6/180,0.00005,0.1,3000);
+        wobbleArm.setPower(0);
         sleep(1000);
         setLoader(true);
         setLoader(false);
-        turnPID(-176,0.6/180,0.00005,0.1,1000);
+        sleep(1000);
+        //turnPID(-178,0.4/180,0.00000,0.1,3000);
         setLoader(true);
         setLoader(false);
-        turnPID(-174,0.6/180,0.00005,0.1,1000);
+        sleep(1000);
+        //turnPID(-176,0.4/180,0.00000,0.1,3000);
         setLoader(true);
         setLoader(false);
         shooter.setPower(0);
+        wobbleArm.setPower(1);
+
+        //driveAdjust(-1, 40, 180, 5000);
 
         // Retrieve wobble 2
-        turnPID(90,0.6/180,0.00005,0.1,1000);
+        setWobbleClaw(false);
+        turnPID(115,0.8/180,0.00005,0.1,2500);
         setWobbleArm(true);
-        driveAdjust(0.8, 24, 90, 2000);
+        driveAdjust(0.5, 4, 115, 2000);
         setWobbleClaw(true);
+        sleep(750);
         setWobbleArm(false);        //This may not be necessary if we encounter issues bringing the wobble back into the robot. We could just drag and push the wobble.
-        driveAdjust(-0.8, 24, 90, 2000);
+        sleep(1000);
+        driveAdjust(-0.5, 4, 115, 2000);
 
         //Drive to designated depot
-        turnPID(angle,0.8/180,0.0001,0.5,5000);
-        driveAdjust(1, dist, angle, 5000);
+        turnPID(angle+5,0.8/180,0.0001,0.5,5000);
+        driveAdjust(1, dist-10, angle+5, 5000);
 
         // Release wobble 2
         setWobbleArm(true);
         setWobbleClaw(false);
         setWobbleArm(false);
+        sleep(250);
 
         // Park
         //There is no case for position 1: it is assumed the robot will place the wobble while on the navigation line
         switch (pos) {
             case 0:
-                driveAdjust(-0.8, 10, angle, 2000);
-                turnPID(0,0.8/180,0.0001,0.5,5000);
-                driveAdjust(0.8, 20, 0, 2000);
+                driveAdjust(-1, 10, 0, 2000);
+                turnPID(35,1/180,0.0001,0.5,2500);
+                driveAdjust(1, 30, 10, 2000);
                 break;
             case 4:
-                turnPID(0,0.8/180,0.0001,0.5,5000);
-                driveAdjust(-0.8, 50, 0, 2000);
+                turnPID(0,0.8/180,0.0001,0.5,2000);
+                driveAdjust(-1, 50, 0, 2500);
                 break;
         }
 
-        telemetry.addData("auto:", "complete");
+        telemetry.addData("auto: ", "complete");
         telemetry.update();
     }
 }

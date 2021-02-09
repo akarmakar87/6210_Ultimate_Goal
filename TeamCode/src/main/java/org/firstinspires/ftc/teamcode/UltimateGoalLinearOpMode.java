@@ -835,13 +835,14 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
      * NOTE: There is a 1500 millisecond wait time to allow it to complete the servo movement before continuing to the next action - you can reduce it if needed.
      * @param deploy - True = extends stick, False = retracts stick
      */
-    public void setLoader(boolean deploy){
+    public void setLoader(boolean deploy) {
         if (deploy)
             loader.setPosition(0);
         else
             loader.setPosition(1);
 
-        sleep(1500);
+        sleep(800);
+
     }
 
     /**
@@ -910,7 +911,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
         else{
             wobbleArm.setTargetPosition(0);
-            sleep(2000);
+            //sleep(2000);
         }
     }
 
