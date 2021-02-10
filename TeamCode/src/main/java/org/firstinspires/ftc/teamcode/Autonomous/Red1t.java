@@ -29,7 +29,8 @@ public class Red1t extends UltimateGoalLinearOpMode {
         int wdist = 0;
         int angle = 0;
         int angleAdjust = 0;
-        int wangle = 105;
+        int wangle = 0;
+        int distA = 0;
         waitForStart();
 
         // Detect rings
@@ -39,29 +40,37 @@ public class Red1t extends UltimateGoalLinearOpMode {
         // Set values based on # of rings
         switch (pos) {
             case 0:
-                dist = 38;
-                angle = -30;
-                wdist = 4;
-                wangle = 115;
+                dist = 45;
+                angle = -26;
+                wdist = 6;
+                wangle = 116;
                 angleAdjust = 5;
+                distA = 12;
+                strafeAdjust(1, 6, 0, 3000);
                 break;
             case 1:
-                dist = 64;
-                angle = 3;
-                wdist = 16;
+                dist = 66;
+                angle = 4;
+                wangle = 110;
+                wdist = 10;
+                distA = 6;
+                angleAdjust = -3;
                 strafeAdjust(1, 12, 0, 3000);
                 break;
             case 4:
-                dist = 90;
-                angle = -4;
-                wdist = 16;
-                angleAdjust = 5;
+                dist = 85;
+                angle = -7;
+                wdist = 12;
+                wangle = 100;
+                distA = 6;
+                angleAdjust = -1;
+                distA = 8;
                 strafeAdjust(1, 12, 0, 3000);
                 break;
         }
 
         // Enter central position
-        driveAdjust(1, 18, 0, 5000);
+        driveAdjust(1, 22, 0, 5000);
 
         //Drive to designated depot
         turnPID(angle,0.8/180,0.0001,0.5,5000);
@@ -73,23 +82,23 @@ public class Red1t extends UltimateGoalLinearOpMode {
         setWobbleArm(false);
 
         // Return to central position
-        driveAdjustShooter(-1, dist-6, angle, 5000, 0.95);
-        setWobbleClaw(true);
+        driveAdjustShooter(-1, dist-8, angle, 5000, 0.95);
+        //setWobbleClaw(true);
 
         // Fire rings at powershots
         if (pos == 0)
-            turnPID(170,0.6/180,0.00005,0.1,3000);
+            turnPID(168,0.6/180,0.00005,0.1,3000);
         else
-            turnPID(175,0.6/180,0.00005,0.1,3000);
+            turnPID(168,0.6/180,0.00005,0.1,3000);
         wobbleArm.setPower(0);
-        sleep(1000);
+        //sleep(1000);
         setLoader(true);
         setLoader(false);
-        sleep(1000);
+        //sleep(1000);
         //turnPID(-178,0.4/180,0.00000,0.1,3000);
         setLoader(true);
         setLoader(false);
-        sleep(1000);
+        //sleep(1000);
         //turnPID(-176,0.4/180,0.00000,0.1,3000);
         setLoader(true);
         setLoader(false);
@@ -100,18 +109,18 @@ public class Red1t extends UltimateGoalLinearOpMode {
 
         // Retrieve wobble 2
         setWobbleClaw(false);
-        turnPID(wangle,0.8/180,0.00005,0.1,2500);
+        turnPID(wangle,0.7/180,0.00005,0.1,2500);
         setWobbleArm(true);
         driveAdjust(0.5, wdist, wangle, 2000);
         setWobbleClaw(true);
-        sleep(750);
+        sleep(1000);
         setWobbleArm(false);        //This may not be necessary if we encounter issues bringing the wobble back into the robot. We could just drag and push the wobble.
         sleep(750);
         driveAdjust(-0.5, wdist, wangle, 2000);
 
         //Drive to designated depot
         turnPID(angle+angleAdjust,0.8/180,0.0001,0.5,5000);
-        driveAdjust(1, dist-13, angle+angleAdjust, 5000);
+        driveAdjust(1, dist-distA, angle+angleAdjust, 5000);
 
         // Release wobble 2
         setWobbleArm(true);
@@ -125,14 +134,14 @@ public class Red1t extends UltimateGoalLinearOpMode {
             case 0:
                 driveAdjust(-1, 10, 0, 2000);
                 turnPID(35,1/180,0.0001,0.5,2500);
-                driveAdjust(1, 30, 10, 2000);
+                driveAdjust(1, 35, 10, 2000);
                 break;
             case 1:
-                driveAdjust(-1, 10, 0, 2000);
+                driveAdjust(-1, 5, 0, 2000);
                 break;
              case 4:
-                turnPID(0,0.8/180,0.0001,0.5,2000);
-                driveAdjust(-1, 50, 0, 2500);
+                ///turnPID(0,0.8/180,0.0001,0.5,2000);
+                driveAdjust(-1, 30, 0, 2500);
                 break;
         }
 

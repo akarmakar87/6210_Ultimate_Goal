@@ -156,7 +156,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
              *
              * Controls:
              * Left Trigger - Shooter in ,  Right Trigger - Shooter out
-             * B - Auto arm deploy , X - Wobble claw in/out , A - Loader in/out
+             * B - Auto arm deploy , X - Wobble claw in/out , A - Loader in/out, Y - Loader macro
              *
              */
 
@@ -175,6 +175,14 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             //Loader toggle
             if(isPressed("2a", gamepad2.a)) loaderBool = !loaderBool;
+
+            //Loader Speed Macro
+            if(isPressed("2y", gamepad2.y)) {
+                for ( int x = 0; x < 3; x++){
+                    setLoader(true);
+                    setLoader(false);
+                }
+            }
 
             //Depoloyed
             if (loaderBool) loader.setPosition(1);
