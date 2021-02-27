@@ -77,9 +77,9 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             // Drive mode toggle
-            if (isPressed("1y", gamepad1.y)){
+            /*if (isPressed("1y", gamepad1.y)){
                 field = !field;
-            }
+            }*/
 
             // Turn increments
             if (isPressed("1dl", gamepad1.dpad_left)){
@@ -116,13 +116,13 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             //TOWARDS GOAL
-            else if(gamepad1.dpad_up){
+            /*else if(gamepad1.dpad_up){
                 motorP = autoTurn(zeroAng, 0, 0.025);
             }
             //TOWARDS BACK
             else if (gamepad1.dpad_down){
                 motorP = autoTurn(zeroAng, 180, 0.025);
-            }
+            }*/
 
             else if (incrementTurn){
                 motorP = autoTurn(0, turnAngle, 0.03);
@@ -137,15 +137,22 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             }
 
+            if (gamepad1.dpad_up){
+                turnPID(0,0.6/180,0.00005,0.1,1000);
+            }
+            if (gamepad1.dpad_down){
+                turnPID(170,0.6/180,0.00005,0.1,1000);
+            }
+
             //SET MOTOR POWERS
             setEachPower(motorP, halfspeed);
 
             // Intake
             if(gamepad1.right_bumper){
-                intake.setPower(-0.83);
+                intake.setPower(-0.9);
             }
             else if(gamepad1.left_bumper){
-                intake.setPower(0.83);
+                intake.setPower(0.9);
             }
             else{
                 intake.setPower(0);
