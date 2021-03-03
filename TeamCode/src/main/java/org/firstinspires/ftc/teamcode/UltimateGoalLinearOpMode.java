@@ -135,6 +135,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             // if auto value is -1, set left position variable to true
             leftPos = auto == -1 ? true : false;
             telemetry.addData("IMU calib status", imu.getCalibrationStatus().toString());
+            telemetry.addData("Arm angle: ", wobbleArm.getCurrentPosition());
             telemetry.update();
         }
 

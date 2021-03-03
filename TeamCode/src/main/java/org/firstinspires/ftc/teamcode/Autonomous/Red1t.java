@@ -43,8 +43,8 @@ public class Red1t extends UltimateGoalLinearOpMode {
                 dist = 41;
                 angle = -25;
                 wdist = 10; //8
-                wangle = 117;   //115
-                angleAdjust = 5;
+                wangle = 112;   //115
+                angleAdjust = 7;
                 distA = 12;
                 strafeAdjust(1, 6, 0, 3000);
                 break;
@@ -52,8 +52,8 @@ public class Red1t extends UltimateGoalLinearOpMode {
                 dist = 63;
                 angle = 4;
                 wangle = 110;   //110
-                wdist = 10;
-                distA = 9;
+                wdist = 11;
+                distA = 8;
                 angleAdjust = -3;
                 strafeAdjust(1, 12, 0, 3000);
                 break;
@@ -61,7 +61,7 @@ public class Red1t extends UltimateGoalLinearOpMode {
                 dist = 87;
                 angle = -10;
                 wdist = 11;  //9
-                wangle = 114;   //113
+                wangle = 113;   //113
                 angleAdjust = 0;
                 distA = 8;
                 strafeAdjust(1, 12, 0, 3000);
@@ -81,16 +81,16 @@ public class Red1t extends UltimateGoalLinearOpMode {
         setWobbleArm(false);
 
         // Return to central position
-        driveAdjustShooter(-1, dist-8, angle, 5000, 0.9);  //mid goal = 'max = .95'
+        driveAdjustShooter(-1, dist-8, angle, 5000, 0.68);  //mid goal = 'max = .95'
         //setWobbleClaw(true);
 
         // Fire rings at powershots
         if (pos == 0)
-            turnPID(171,0.6/180,0.00005,0.1,3000);  //mid goal = 175
+            turnPID(172,0.6/180,0.00005,0.1,3000);  //mid goal = 175
         else if (pos == 1)
-            turnPID(171,0.6/180,0.00005,0.1,3000);
+            turnPID(170.5,0.6/180,0.00005,0.1,3000);
         else if (pos == 4)
-            turnPID(172,0.6/180,0.00005,0.1,3000);  // 170
+            turnPID(170,0.6/180,0.00005,0.1,3000);  // 170
         wobbleArm.setPower(0);
         sleep(100);
         setLoader(true);
@@ -139,6 +139,7 @@ public class Red1t extends UltimateGoalLinearOpMode {
                 break;
             case 1:
                 //driveAdjust(-1, 5, 0, 2000);
+                sleep(1000);
                 break;
              case 4:
                 ///turnPID(0,0.8/180,0.0001,0.5,2000);

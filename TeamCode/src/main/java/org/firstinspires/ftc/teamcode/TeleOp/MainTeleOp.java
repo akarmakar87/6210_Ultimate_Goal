@@ -171,15 +171,20 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Output
 
             if(gamepad2.right_trigger > 0.05){
-                shooter.setPower(gamepad2.right_trigger);
+                shooterPower = gamepad2.right_trigger;
             }
             else if(gamepad2.left_trigger > 0.05){
-                shooter.setPower(-gamepad2.left_trigger);
+                shooterPower = -gamepad2.left_trigger;
             }
             else{
-                shooter.setPower(0);
+                shooterPower = 0;
             }
 
+            if (gamepad2.dpad_down){
+                shooterPower = 0.7;
+            }
+
+            shooter.setPower(shooterPower);
             //Loader toggle
             if(isPressed("2a", gamepad2.a)) loaderBool = !loaderBool;
 
@@ -201,6 +206,9 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             //Opened
             setWobbleClaw(wobbleBool);
+
+
+
 
             // Arm
             /*if (isPressed("2b", gamepad2.b)) {
