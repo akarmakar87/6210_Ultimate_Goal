@@ -51,7 +51,7 @@ public class Red1t extends UltimateGoalLinearOpMode {
             case 1:
                 dist = 63;
                 angle = 4;
-                wangle = 110;   //110
+                wangle = 109;   //110
                 wdist = 11;
                 distA = 8;
                 angleAdjust = -3;
@@ -81,14 +81,14 @@ public class Red1t extends UltimateGoalLinearOpMode {
         setWobbleArm(false);
 
         // Return to central position
-        driveAdjustShooter(-1, dist-8, angle, 5000, 0.68);  //mid goal = 'max = .95'
+        driveAdjustShooter(-1, dist-8, angle, 5000, 0.7);  //mid goal = 'max = .95'
         //setWobbleClaw(true);
 
         // Fire rings at powershots
         if (pos == 0)
             turnPID(172,0.6/180,0.00005,0.1,3000);  //mid goal = 175
         else if (pos == 1)
-            turnPID(170.5,0.6/180,0.00005,0.1,3000);
+            turnPID(170,0.6/180,0.00005,0.1,3000);
         else if (pos == 4)
             turnPID(170,0.6/180,0.00005,0.1,3000);  // 170
         wobbleArm.setPower(0);
