@@ -706,7 +706,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         // LEFT = +, RIGHT = -
 
         double total = (inches) * strafeEncoderToInches; // -2 to account for drift
-        double remaining, finalPower, error, rp, lp, p = 1.2;
+        double remaining, finalPower, error, rp, lp, p = 1.4; //was 1.2
         ElapsedTime t = new ElapsedTime();
         t.reset();
         resetEncoders();
@@ -909,7 +909,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         if (deployed) {
             wobbleArm.setTargetPosition(75);
             sleep(1000);
-            wobbleArm.setTargetPosition(160);
+            wobbleArm.setTargetPosition(170);
             sleep(1000);
         }
         else{
