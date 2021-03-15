@@ -11,7 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.TeleOp.Testing.MyOpenCV_Webcam;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -47,7 +49,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
     //-----OPENCV VARIABLES-----//
 
-    OpenCvInternalCamera phoneCam;
+    OpenCvCamera logitech_webcam;
     StackDeterminationPipeline pipeline;
     boolean leftPos;
 
@@ -149,18 +151,19 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
      */
     public void initOpenCV(){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, cameraMonitorViewId); // Change to FRONT camera
+        logitech_webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Logitech C310"), cameraMonitorViewId);
         pipeline = new StackDeterminationPipeline(leftPos);
-        phoneCam.setPipeline(pipeline);
+        logitech_webcam.setPipeline(pipeline);
 
-        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+        //logitech_webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+        // ^ not supported with camera type
 
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        logitech_webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); // change to upright phone orientation
+                logitech_webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); // change to upright phone orientation
             }
         });
     }
@@ -333,26 +336,22 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
 
     /**
      * PURPOSE: Detect the number of rings in the stack
-     * ISSUES: If the robot is on the RIGHT starting line, robot needs to turn 15 degrees left to get the stack in view.
-     *         This turn is hard to tune bc the min power is 0.3 but that's enough to overshoot the target angle.
-     *         Also, it's not final yet whether we will turn or strafe or whatnot
+     * TIPS: Make sure the robot is centered on the line and aligned against the wall as accurately as possible.
      * NOTE: Works pretty well, regardless of lighting differences - just make sure surroundings are fairly bright.
-     *       The left starting position is preferable, since we don't have to turn to view the stack.
+     * IMPORTANT: Make sure the GREEN WEBCAM LIGHT is ON before hitting start, or it will return 4 no matter what.
      * @return # of rings in stack
      */
     public int detectStack(){
 
-        //if (!leftPos) // if starting position is NOT on the left, then turn left
-            //turnPID(15,0.25/180,0,0.01,5000); // need to fine tune
-
-        sleep(1000); // half a second wait time between turning and detecting
+        sleep(1000);
 
         int numRings = pipeline.getPosition();
+        int avg = pipeline.getAnalysis();
 
         telemetry.addData("numRings:", numRings);
+        telemetry.addData("Analysis: ", avg);
         telemetry.update();
-        //if (!leftPos) // if starting position is NOT on the left, then back straight
-            //turnPID(0,0.25/180,0,0.01,5000); // need to fine tune
+        sleep(1000);
         return numRings;
     }
 

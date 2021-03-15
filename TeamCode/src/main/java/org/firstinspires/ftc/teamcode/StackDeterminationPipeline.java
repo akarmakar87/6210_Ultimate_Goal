@@ -54,8 +54,8 @@ public class StackDeterminationPipeline extends OpenCvPipeline {
     static final int REGION_WIDTH = 50;
     static final int REGION_HEIGHT = 40;
 
-    final int FOUR_RING_THRESHOLD = 150;
-    final int ONE_RING_THRESHOLD = 135;
+    final int FOUR_RING_THRESHOLD = 147;
+    final int ONE_RING_THRESHOLD = 130;
 
     Point region1_pointA;
     Point region1_pointB;
@@ -94,9 +94,9 @@ public class StackDeterminationPipeline extends OpenCvPipeline {
      */
     public void setRegion1TopleftAnchorPoint(){
         if (leftPosition){
-            REGION1_TOPLEFT_ANCHOR_POINT = new Point(140,130); // NO TURN
+            REGION1_TOPLEFT_ANCHOR_POINT = new Point(260,200);
         }else{
-            REGION1_TOPLEFT_ANCHOR_POINT = new Point(0,120); // TURN NEEDED about 15 degrees left (+)
+            REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,195);
         }
 
         region1_pointA = new Point(

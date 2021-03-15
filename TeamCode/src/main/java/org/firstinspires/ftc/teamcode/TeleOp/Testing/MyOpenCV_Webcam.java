@@ -21,10 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.TeleOp.Testing;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -38,10 +35,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MyOpenCV", group = "teleop")
-public class MyOpenCV extends UltimateGoalLinearOpMode
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MyOpenCV_Webcam", group = "teleop")
+public class MyOpenCV_Webcam extends UltimateGoalLinearOpMode
 {
-    OpenCvInternalCamera phoneCam;
+    OpenCvCamera webcam;
     StackDeterminationPipeline pipeline;
 
     @Override
@@ -49,22 +46,22 @@ public class MyOpenCV extends UltimateGoalLinearOpMode
     {
         init(hardwareMap, -1);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, cameraMonitorViewId); // Change to FRONT camera
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Logitech C310"), cameraMonitorViewId);
 
         pipeline = new StackDeterminationPipeline();
-        phoneCam.setPipeline(pipeline);
+        webcam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
-        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+        //  webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); // change to upright phone orientation
+                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); // change to upright phone orientation
             }
         });
 
@@ -103,17 +100,17 @@ public class MyOpenCV extends UltimateGoalLinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        //static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(140,130); // NO TURN
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(260,200); // NO TURN
 
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(0,120); // TURN NEEDED about 15 degrees left (+)
+        //static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,195);
 
         // Y IS VERTICAL AND X IS HORIONTAL ON UPRIGHT FRAME
 
         static final int REGION_WIDTH = 50;
         static final int REGION_HEIGHT = 40;
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 135;
+        final int FOUR_RING_THRESHOLD = 150; // 147?
+        final int ONE_RING_THRESHOLD = 135; // 130
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,
