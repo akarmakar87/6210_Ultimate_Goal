@@ -13,9 +13,7 @@ public class Red2t extends UltimateGoalLinearOpMode {
         init(hardwareMap, 1);
         initOpenCV();
 
-        //  pos = detectStack();
-
-        int pos = 1;
+        int pos = detectStack();
 
         int angle1 = 0;
         int dist1 = 0;
@@ -25,8 +23,8 @@ public class Red2t extends UltimateGoalLinearOpMode {
             case 0:
                 waitForStart();
 
-                strafeAdjust(1, 8, 0, 3000);
-                driveAdjust(0.8, 50, 0, 5000);
+                strafeAdjust(1, 10, 0, 3000);
+                driveAdjust(0.8, 60, 0, 5000);
 
                 shooter.setPower(.85);
 
@@ -35,13 +33,13 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
                 sleep(500);
 
-                driveAdjust(-1, 5, 0, 5000);
+                driveAdjust(-1, 11, 0, 5000);
 
                 turnPID(178, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
-                angle1 = 165;
-                dist1 = 29;
+                angle1 = 168;
+                dist1 = 31;
                 break;
 
             case 1:
@@ -60,7 +58,8 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
                 strafeAdjust(1, 8, 0, 3000);
 
-                turnPID(180, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(181, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
                 angle1 = 190;
@@ -70,8 +69,8 @@ public class Red2t extends UltimateGoalLinearOpMode {
             case 4:
                 waitForStart();
 
-                strafeAdjust(1, 8, 0, 3000);
-                driveAdjust(1, 100, 0, 5000);
+                strafeAdjust(1, 10, 0, 3000);
+                driveAdjust(1, 102, 0, 5000);
 
                 shooter.setPower(.85);
 
@@ -85,8 +84,8 @@ public class Red2t extends UltimateGoalLinearOpMode {
                 turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
                 turnPID(181, 0.6 / 180, 0.00005, 0.1, 3000);
 
-                angle1 = 176;
-                dist1 = 76;
+                angle1 = 173;
+                dist1 = 78;
                 break;
 
         }
@@ -106,9 +105,9 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
         shooter.setPower(0);
 
-        turnPID(130, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(132, 0.6 / 180, 0.00005, 0.1, 3000);
 
-        driveAdjust(1, 27, 0, 5000);
+        driveAdjust(1, 29, 0, 5000);
 
         setWobbleClaw(true);
         sleep(1000);
@@ -119,8 +118,10 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
         driveAdjust(-1, dist1, 0, 5000);
 
-        turnPID(125, 0.6 / 180, 0.00005, 0.1, 3000);
-        turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
+        if (pos == 0) {
+            turnPID(110, 0.6 / 180, 0.00005, 0.1, 3000);
+            turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
+        }
 
         setWobbleArm(true);
 
@@ -134,6 +135,10 @@ public class Red2t extends UltimateGoalLinearOpMode {
         } else if (pos == 1) {
             turnPID(180, 0.6 / 180, 0.00005, 0.1, 3000);
             driveAdjust(1, 15, 0, 5000);
+        } else if (pos == 0) {
+            driveAdjust(-1, 5, 0, 5000);
+            turnPID(20, 0.6 / 180, 0.00005, 0.1, 3000);
+            driveAdjust(1, 10, 0, 5000);
         }
     }
 }
