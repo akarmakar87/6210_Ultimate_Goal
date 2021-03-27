@@ -54,8 +54,8 @@ public class StackDeterminationPipeline extends OpenCvPipeline {
     static final int REGION_WIDTH = 50;
     static final int REGION_HEIGHT = 40;
 
-    final int FOUR_RING_THRESHOLD = 147;
-    final int ONE_RING_THRESHOLD = 130;
+    final int FOUR_RING_THRESHOLD = 150;
+    final int ONE_RING_THRESHOLD = 130;  //130
 
     Point region1_pointA;
     Point region1_pointB;

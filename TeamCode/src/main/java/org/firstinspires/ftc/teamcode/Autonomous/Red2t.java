@@ -11,9 +11,12 @@ public class Red2t extends UltimateGoalLinearOpMode {
     @Override
     public void runOpMode() {
         init(hardwareMap, 1);
+
         initOpenCV();
 
-        int pos = detectStack();
+        waitForStart ();
+
+        int pos =  detectStack();
 
         int angle1 = 0;
         int dist1 = 0;
@@ -21,21 +24,21 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
         switch (pos) {
             case 0:
-                waitForStart();
 
                 strafeAdjust(1, 10, 0, 3000);
-                driveAdjust(0.8, 60, 0, 5000);
+                driveAdjust(0.8, 63, -2, 5000);
 
-                shooter.setPower(.85);
+                shooter.setPower(.9);
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
 
                 sleep(500);
 
-                driveAdjust(-1, 11, 0, 5000);
+                driveAdjust(-1, 13, 0, 5000);
 
-                turnPID(178, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(180, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
                 angle1 = 168;
@@ -43,23 +46,22 @@ public class Red2t extends UltimateGoalLinearOpMode {
                 break;
 
             case 1:
-                waitForStart();
 
-                driveAdjust(1, 80, 0, 5000);
+                driveAdjust(1, 86, 0, 5000);
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
 
                 sleep(1000);
 
-                shooter.setPower(.85);
+                shooter.setPower(.9);
 
-                driveAdjust(-1, 30, 0, 5000);
+                driveAdjust(-1, 35, 0, 5000);
 
                 strafeAdjust(1, 8, 0, 3000);
 
                 turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
-                turnPID(181, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(179, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
                 angle1 = 190;
@@ -67,10 +69,9 @@ public class Red2t extends UltimateGoalLinearOpMode {
                 break;
 
             case 4:
-                waitForStart();
 
                 strafeAdjust(1, 10, 0, 3000);
-                driveAdjust(1, 102, 0, 5000);
+                driveAdjust(1, 108, 0, 5000);
 
                 shooter.setPower(.85);
 
@@ -79,12 +80,12 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
                 sleep(1000);
 
-                driveAdjust(-1, 50, 0, 5000);
+                driveAdjust(-1, 56, 0, 5000);
 
                 turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
                 turnPID(181, 0.6 / 180, 0.00005, 0.1, 3000);
 
-                angle1 = 173;
+                angle1 = 165;
                 dist1 = 78;
                 break;
 
@@ -107,7 +108,11 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
         turnPID(132, 0.6 / 180, 0.00005, 0.1, 3000);
 
-        driveAdjust(1, 29, 0, 5000);
+        if (pos == 1) {
+            driveAdjust(1, 29, 0, 5000);
+        } else{
+            driveAdjust(1, 31, 0, 5000);
+        }
 
         setWobbleClaw(true);
         sleep(1000);
@@ -121,24 +126,29 @@ public class Red2t extends UltimateGoalLinearOpMode {
         if (pos == 0) {
             turnPID(110, 0.6 / 180, 0.00005, 0.1, 3000);
             turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
+        } else if (pos == 4) {
+            turnPID(-40, 0.6 / 180, 0.00005, 0.1, 3000);
+        } else {
+            turnPID(-75, 0.6 / 180, 0.00005, 0.1, 3000);
+            driveAdjust(1, 2, 0, 5000);
         }
 
         setWobbleArm(true);
 
         setWobbleClaw(false);
 
+        sleep(300);
         setWobbleArm(false);
 
         if (pos == 4) {
-            turnPID(180, 0.6 / 180, 0.00005, 0.1, 3000);
-            driveAdjust(1, 30, 0, 5000);
+            driveAdjust(-1,  30, 0, 5000);
         } else if (pos == 1) {
-            turnPID(180, 0.6 / 180, 0.00005, 0.1, 3000);
-            driveAdjust(1, 15, 0, 5000);
-        } else if (pos == 0) {
             driveAdjust(-1, 5, 0, 5000);
-            turnPID(20, 0.6 / 180, 0.00005, 0.1, 3000);
-            driveAdjust(1, 10, 0, 5000);
+        } else if (pos == 0) {
+            driveAdjust(-1, 5, -90, 5000);
+            turnPID(5, 0.6 / 180, 0.00005, 0.1, 3000);
+            driveAdjust(1, 12, 0,    5000);
         }
+
     }
 }
