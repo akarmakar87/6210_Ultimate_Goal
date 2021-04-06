@@ -47,7 +47,7 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
             case 1:
 
-                driveAdjust(1, 86, 0, 5000);
+                driveAdjust(1, 85, 0, 5000);
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
@@ -56,7 +56,7 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
                 shooter.setPower(.9);
 
-                driveAdjust(-1, 35, 0, 5000);
+                driveAdjust(-1, 36, 0, 5000);
 
                 strafeAdjust(1, 8, 0, 3000);
 
@@ -73,14 +73,14 @@ public class Red2t extends UltimateGoalLinearOpMode {
                 strafeAdjust(1, 10, 0, 3000);
                 driveAdjust(1, 108, 0, 5000);
 
-                shooter.setPower(.85);
+                shooter.setPower(.9);
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
 
-                sleep(1000);
+                sleep(400);
 
-                driveAdjust(-1, 56, 0, 5000);
+                driveAdjust(-1, 57, 0, 5000);
 
                 turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
                 turnPID(181, 0.6 / 180, 0.00005, 0.1, 3000);
@@ -94,30 +94,34 @@ public class Red2t extends UltimateGoalLinearOpMode {
         setLoader(true);
         setLoader(false);
 
-        sleep(400);
+        sleep(600);
 
         setLoader(true);
         setLoader(false);
 
-        sleep(400);
+        sleep(600);
 
         setLoader(true);
         setLoader(false);
 
         shooter.setPower(0);
 
-        turnPID(132, 0.6 / 180, 0.00005, 0.1, 3000);
+        if (pos == 0) {
+            turnPID(129, 0.6 / 180, 0.00005, 0.1, 3000);
+        } else {
+            turnPID(133, 0.6 / 180, 0.00005, 0.1, 3000);
+        }
 
         if (pos == 1) {
             driveAdjust(1, 29, 0, 5000);
-        } else{
-            driveAdjust(1, 31, 0, 5000);
+        } else {
+            driveAdjust(1, 30, 0, 5000);
         }
 
         setWobbleClaw(true);
-        sleep(1000);
+        sleep(300);
         setWobbleArm(false);
-        sleep(500);
+        sleep(300);
 
         turnPID(angle1, 0.6 / 180, 0.00005, 0.1, 3000);
 
@@ -137,7 +141,7 @@ public class Red2t extends UltimateGoalLinearOpMode {
 
         setWobbleClaw(false);
 
-        sleep(300);
+        sleep(400);
         setWobbleArm(false);
 
         if (pos == 4) {
