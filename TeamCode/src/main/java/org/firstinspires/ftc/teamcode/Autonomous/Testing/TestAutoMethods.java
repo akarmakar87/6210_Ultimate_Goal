@@ -22,6 +22,16 @@ public class TestAutoMethods extends UltimateGoalLinearOpMode {
        intake.setPower(-1);
        sleep(2000);
        driveAdjust(1, 12, 0, 3000);
+       sleep (3000);
+       driveAdjust(1, 10, 0, 3000);
+       sleep (3000);
+
+
+       setWobbleArm(true);
+
+
+       sleep(3000);
+
 
     }
 }

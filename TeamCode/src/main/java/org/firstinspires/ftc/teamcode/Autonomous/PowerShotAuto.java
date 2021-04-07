@@ -18,8 +18,9 @@ public class PowerShotAuto extends UltimateGoalLinearOpMode {
         waitForStart ();
 
         int pos =  detectStack();
-        int dropDist = 0;
-        int wobbleAngle = 0;
+        int dropDist1 = 0;
+        int wobbleAngle1 = 0;
+        int wobbleAngle2 = 0;
         int wobbleDist1 = 0;
         int wobbleDist2 = 0;
         int wobbleDist3 = 0;
@@ -28,15 +29,17 @@ public class PowerShotAuto extends UltimateGoalLinearOpMode {
         switch (pos) {
             case 0:
 
-                 dropDist = 0;
+                 dropDist1 = 0;
 
-                 wobbleAngle = 0;
+                 wobbleAngle1 = -50;
 
-                 wobbleDist1 = 0;
+                 wobbleAngle2 = 148;
 
-                 wobbleDist2 = 0;
+                 wobbleDist1 = 18;
 
-                 wobbleDist3 = 0;
+                 wobbleDist2 = 18;
+
+                 wobbleDist3 = 25;
 
                  parkDist = 0;
 
@@ -44,9 +47,11 @@ public class PowerShotAuto extends UltimateGoalLinearOpMode {
 
             case 1:
 
-                dropDist = 0;
+                dropDist1 = 0;
 
-                wobbleAngle = 0;
+                wobbleAngle1 = 0;
+
+                wobbleAngle2 = 0;
 
                 wobbleDist1 = 0;
 
@@ -60,9 +65,11 @@ public class PowerShotAuto extends UltimateGoalLinearOpMode {
 
             case 4:
 
-                dropDist = 0;
+                dropDist1 = 0;
 
-                wobbleAngle = 0;
+                wobbleAngle1 = 0;
+
+                wobbleAngle2 = 0;
 
                 wobbleDist1 = 0;
 
@@ -76,35 +83,33 @@ public class PowerShotAuto extends UltimateGoalLinearOpMode {
 
         }
 
-        shooter.setPower(.6);
+        shooter.setPower(.67);
 
-        driveAdjust(1, 0, 0, 5000);
+        driveAdjust(1, 50, 0, 5000);
 
-        turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
-
-        setLoader(true);
-        setLoader(false);
-
-        turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(185, 0.6 / 180, 0.00005, 0.1, 3000);
 
         setLoader(true);
         setLoader(false);
 
-        turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(188, 0.6 / 180, 0.00005, 0.1, 3000);
 
         setLoader(true);
         setLoader(false);
 
-        turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(191, 0.6 / 180, 0.00005, 0.1, 3000);
+
+        setLoader(true);
+        setLoader(false);
 
         if (pos == 1) {
             strafeAdjust(1, 0, 0, 3000);
         }
 
 
-        driveAdjust(1, dropDist, 0, 5000);
+        driveAdjust(1, dropDist1, 0, 5000);
 
-        turnPID(wobbleAngle, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(wobbleAngle1, 0.6 / 180, 0.00005, 0.1, 3000);
 
         driveAdjust(1, wobbleDist1, 0, 5000);
 
@@ -115,20 +120,21 @@ public class PowerShotAuto extends UltimateGoalLinearOpMode {
 
         driveAdjust(-1, wobbleDist2, 0, 5000);
 
-        turnPID(wobbleAngle - 180, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(wobbleAngle2, 0.6 / 180, 0.00005, 0.1, 3000);
 
         driveAdjust(1, wobbleDist3, 0, 5000);
 
         setWobbleClaw(true);
+        sleep(2000);
         setWobbleArm(false);
 
         sleep(400);
 
         driveAdjust(-1, wobbleDist3, 0, 5000);
 
-        turnPID(wobbleAngle, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(wobbleAngle1, 0.6 / 180, 0.00005, 0.1, 3000);
 
-        driveAdjust(1, wobbleDist2-10, 0, 5000);
+        driveAdjust(1, wobbleDist2-5, 0, 5000);
 
         setWobbleArm(true);
         setWobbleClaw(false);

@@ -906,13 +906,11 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         wobbleArm.setTargetPosition(wobbleArm.getCurrentPosition());
         wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (deployed) {
-            wobbleArm.setTargetPosition(75);
-            sleep(1000);
-            wobbleArm.setTargetPosition(170);
+            wobbleArm.setTargetPosition(550);
             sleep(1000);
         }
         else{
-            wobbleArm.setTargetPosition(10);
+            wobbleArm.setTargetPosition(0);
             //sleep(2000);
         }
     }

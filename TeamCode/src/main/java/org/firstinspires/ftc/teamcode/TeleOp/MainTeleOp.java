@@ -236,7 +236,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
                 deployArm = false;
                 manuel = true;
                 wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                wobbleArm.setPower(gamepad2.right_stick_y*-0.75);
+                wobbleArm.setPower(gamepad2.right_stick_y*-0.5);
             }
             else
                 wobbleArm.setPower(0);
