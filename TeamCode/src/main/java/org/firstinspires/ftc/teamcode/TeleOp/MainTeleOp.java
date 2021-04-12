@@ -171,17 +171,17 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Output
 
             if(gamepad2.right_trigger > 0.05){
-                shooterPower = gamepad2.right_trigger;
+                shooterPower = gamepad2.right_trigger * 0.9;
             }
             else if(gamepad2.left_trigger > 0.05){
-                shooterPower = -gamepad2.left_trigger;
+                shooterPower = -gamepad2.left_trigger * 0.9;
             }
             else{
                 shooterPower = 0;
             }
 
             if (gamepad2.dpad_down){
-                shooterPower = 0.7;
+                shooterPower = 0.625;
             }
 
             shooter.setPower(shooterPower);
@@ -190,10 +190,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             //Loader Speed Macro
             if(isPressed("2y", gamepad2.y)) {
-                for ( int x = 0; x < 3; x++){
-                    setLoader(true);
-                    setLoader(false);
-                }
+
             }
 
             //Depoloyed

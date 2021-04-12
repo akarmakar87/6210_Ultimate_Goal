@@ -17,7 +17,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
         waitForStart();
 
         int pos = detectStack();
-        pos = 1;
+        pos = 4;
         int angle1 = 0;
         int dist1 = 0;
 
@@ -54,7 +54,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
 
                 sleep(1000);
 
-                shooter.setPower(.72);
+                shooter.setPower(.64);  //.72
 
                 driveAdjust(-1, 35, 0, 5000);
 
@@ -73,7 +73,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
                 strafeAdjust(1, 12, 0, 3000);
                 driveAdjust(2, 108, -2, 5000);
 
-                shooter.setPower(.9);
+                shooter.setPower(.72);  //9
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
@@ -114,7 +114,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
             turnPID(170, 0.6 / 180, 0.00005, 0.1, 3000);
             intake.setPower(0);
         } else {
-            intake.setPower(-1);
+            intake.setPower(-0.8);
             turnPID(100, 0.6 / 180, 0.00005, 0.1, 3000);
             driveAdjust(1, 30, 0, 5000);
             turnPID(171, 0.6 / 180, 0.00005, 0.1, 3000);
@@ -156,19 +156,23 @@ public class RedBagel extends UltimateGoalLinearOpMode {
 
             setWobbleClaw(false);
 
+            intake.setPower(.3);
             sleep(400);
+            intake.setPower(0);
             setWobbleArm(false);
             //wobbleArm.setTargetPosition(100);
 
             if (pos == 4) {
-                shooter.setPower(.8);
+                shooter.setPower(.85);
+                intake.setPower(1);
                 turnPID(160, 0.6 / 180, 0.00005, 0.1, 3000);
-                driveAdjust(1, 35, 180, 5000);
+                driveAdjust(1, 40, 180, 5000);
+                intake.setPower(0);
                 setLoader(true);
                 setLoader(false);
                 setLoader(true);
                 setLoader(false);
-                driveAdjust(-1, 7, 180, 5000);
+                driveAdjust(-1, 10, 180, 5000);
                 shooter.setPower(0);
             } else if (pos == 1) {
                 shooter.setPower(.575);
