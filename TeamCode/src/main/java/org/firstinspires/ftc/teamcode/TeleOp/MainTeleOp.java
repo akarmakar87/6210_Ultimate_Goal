@@ -171,10 +171,10 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Output
 
             if(gamepad2.right_trigger > 0.05){
-                shooterPower = gamepad2.right_trigger * 0.9;
+                shooterPower = gamepad2.right_trigger * 0.95;
             }
             else if(gamepad2.left_trigger > 0.05){
-                shooterPower = -gamepad2.left_trigger * 0.9;
+                shooterPower = -gamepad2.left_trigger * 0.95;
             }
             else{
                 shooterPower = 0;

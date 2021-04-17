@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="Blue 1a", group = "auto") // BLUE SIDE
 //@Disabled
-public class Blue1a extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH TO ULTIMATE GOAL LINEAR OPMODE!!!!!!!
+public class Blue1 extends UltimateGoalLinearOpMode { //<-- MAKE SURE TO SWITCH TO ULTIMATE GOAL LINEAR OPMODE!!!!!!!
 
     @Override
     public void runOpMode() throws InterruptedException {

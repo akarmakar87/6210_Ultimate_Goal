@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
-@Autonomous(name="Red 2a", group = "auto") // RED SIDE
+@Autonomous(name="Blue 2a", group = "auto") // BLUE SIDE
 
-public class Red2a extends UltimateGoalLinearOpMode {
+public class Blue2 extends UltimateGoalLinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -16,9 +16,6 @@ public class Red2a extends UltimateGoalLinearOpMode {
         initOpenCV();
 
         int pos, dist = 0;
-        int ag1 = 180;
-        int ag2 = 180;
-        int ag3 = 180;
         int wait = 0;
         double adjust = 0.0;
         double longAdjust = 0.0;
@@ -39,38 +36,28 @@ public class Red2a extends UltimateGoalLinearOpMode {
         // ALIGN WITH DEPOT
         switch (pos) {
             case 0:
-                dist = 60;
+                dist = 55+5;
                 wait = 1250;
-                ag1 = -175;
-                ag2 = -179;
-                ag3 = -177;
                 break;
             case 1:
-                dist = 75;
+                dist = 72+5;
                 wait = 750;
-                ag1 = 179;
-                ag2 = 175;
-                ag3 = 171;
                 break;
             case 4:
-                dist = 110;
+                dist = 100+5;
                 wait = 500;
-                ag1 = -175;
-                ag2 = -179;
-                ag3 = -177;
                 break;
         }
 
-        driveAdjust(1, dist, 0, 5000);
+        driveAdjust(0.8, dist, 0, 5000);
 
         // TURN TOWARD DEPOT
 
-        if (pos == 0 || pos == 4) {
-            turnPID(-90, 0.8 / 180, 0.0001, 0.5, 5000);
-            driveAdjust(0.8, 22, -90, 3);
+        if (pos == 1 || pos == 3) {
+            turnPID(90, 0.8 / 180, 0.0001, 0.5, 5000);
+            driveAdjust(0.6, 20, 90, 3);
         }
-        else
-            turnPID(-45, 0.8 / 180, 0.0001, 0.5, 5000);
+        turnPID(45, 0.8 / 180, 0.0001, 0.5, 5000);
 
         // RELEASE WOBBLE
         //deploy arm
@@ -80,14 +67,17 @@ public class Red2a extends UltimateGoalLinearOpMode {
         //retract arm
         setWobbleArm(false);
 
-        //if (pos == 1 || pos == 3)
-        //    driveAdjust(-0.8, 14, -90, 3);
+        if (pos == 1 || pos == 3){
+            turnPID(90, 0.8 / 180, 0.0001, 0.5, 5000);
+            driveAdjust(-0.6, 20, 90, 3);
+        }
+
 
         // ALIGN PERPENDICULAR TO WHITE LINE
-        turnPID(180,0.8/180,0.0001,0.01,5000);
+        turnPID(180,0.6/180,0.0001,0.01,5000);
 
         // BACK UP PAST WHITE LINE
-        driveAdjustShooter(0.8, dist - 27, 180, 5000, 1);
+        driveAdjustShooter(0.8, dist - 12, 180, 5000, 1);
 
         // ROTATE TO FIRE AT RIGHT POWERSHOT
         //turnPID(180,0.8/180,0.0001,0.01,5000);
@@ -95,22 +85,27 @@ public class Red2a extends UltimateGoalLinearOpMode {
         // FIRE 1
         //startShooter(1);
         sleep(wait);
-        turnPID(ag1,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
-        turnPID(ag2,0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
-        turnPID(ag3, 0.6/180,0.0001,0.01,1000);
         setLoader(true);
         setLoader(false);
         shooter.setPower(0);
 
+        // ROTATE TO FIRE AT MIDDLE POWERSHOT
+
+        // FIRE 2
+
+        // ROTATE TO FIRE AT LEFT POWERSHOT
+
+        // FIRE 3
+
         // ALIGN PERPENDICULAR WITH WHITE LINE
-        turnPID(180,0.6/180,0.00005,0.1,1000);
+        //turnPID(0,0.6/180,0.00005,0.1,5000);
 
         // MOVE FORWARD INTO WHITE LINE
-        driveAdjust(-0.8, 35, 180, 5000);
+        driveAdjust(-0.8, 50, 180, 5000);
 
         telemetry.addData("auto:", "complete");
         telemetry.update();
