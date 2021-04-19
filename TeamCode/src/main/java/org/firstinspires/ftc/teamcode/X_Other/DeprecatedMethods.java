@@ -131,6 +131,59 @@ public class DeprecatedMethods extends LinearOpMode {
         telemetry.update();
     }
 
+    /****MANIPULATOR MECHANISM METHODS****/
+    /**
+     * PURPOSE: Complete full launch cycles
+     * ISSUE: Roughly written, might need to tweak timing between intake and loader
+     * @param zone - I just put this as an idea that you could specify the zone you want to shoot in and it will set the speed accordingly
+     * @param numCycles - enter the # of rings you want to launch
+     */
+    public void launchCycle(int zone, int numCycles){
+
+        switch (zone){
+            case 1:
+            case 2:
+            case 3:
+                //startShooter(0.75); // These are placeholders for the actual speed values
+                break;
+            default:
+                telemetry.addData("Error:","Zone not specified correctly");
+                telemetry.update();
+        }
+        //startIntake();
+
+        for (int i = 0; i < numCycles; i++){
+            sleep(1000);
+           // setLoader(true);
+            telemetry.addData("Shot:", i+1);
+            telemetry.update();
+           // setLoader(false);
+            telemetry.addData("Load next", "");
+            telemetry.update();
+        }
+        //shooter.setPower(0);
+       // intake.setPower(0);
+    }
+
+    /**
+     * PURPOSE: Run the intake for a certain amount of time
+     * NOTE: Power is currently set to 0.8 because anything greater launches the wheel over the loading zone
+     * ISSUES: Not an issue, but I'm not sure if I'm supposed to increment the starting speed like I did for the flywheel...
+     * @param milliseconds - enter the number of milliseconds you want intake to run for (1000 milliseconds = 1 second)
+     */
+    public void runIntake(long milliseconds){
+        //intake.setPower(-0.8);
+        sleep(milliseconds);
+        //intake.setPower(0);
+    }
+
+    /**
+     * PURPOSE: Starts intake motor - that's it
+     */
+    public void startIntake(){
+        //intake.setPower(-0.8);
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {}
 }

@@ -58,7 +58,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
     //-----TELE-OP TOGGLE VARIABLES-----//
     public HashMap<String, Boolean> buttons = new HashMap<String, Boolean>();
 
-
     /**
      * NOTE: It is important to make sure that no matter which method is running, if you hit the STOP button on the DS, it shouldn't throw an error.
      *       If you try this and see that the method is throwing an error, add "throws Interruptedexception" in this part of the method declaration:
@@ -373,8 +372,7 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
      * @param rightX - Right joystick x
      * @return motor powers array [LF, RF, LB, RB]
      */
-    public double[] holonomicDrive(double leftY, double leftX, double rightX)
-    {
+    public double[] holonomicDrive(double leftY, double leftX, double rightX){
         double[] motorPower = {0.0, 0.0, 0.0, 0.0};
 
         motorPower[0] = leftY + leftX + rightX;
@@ -809,26 +807,69 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         minPower = 0.3;
     }
 
+    /**
+     * PURPOSE: Rotate using PID control
+     * NOTE: You'll have to individually fine tune each PID turn with the kP, kI, and kD constants.
+     *   --> I believe the best practice is to start with kP, then add a VERY small value for kI, then add kD if needed.
+     *   --> You can also check out this page for more details: https://robotics.stackexchange.com/questions/167/what-are-good-strategies-for-tuning-pid-loops
+     * ISSUES: The minimum speed the motors can turn properly at is 0.3, which might be disadvantage to turning since slower is better - however, you can work around it.
+     * EXAMPLES OF ALREADY TUNED PID TURNS:
+     *      turnPID(90,0.8/180,0.0001,0.5,5000); <-- you can use these!
+     *      turnPID(180,0.8/180,0.00005,0.1,5000); <-- ^
+     * @param tAngle - the angle you want it to turn to on a -180 t0 180 scale (relative to the initialization orientation)
+     * @param kP - usually something/180
+     * @param kI - usually something super tiny like 0.0001 or 0.00001
+     * @param kD - usually something from 0-1 like 0.5
+     * @param seconds - # of seconds you want to allow it to attempt moving before exiting the method (in case robot gets stuck)
+     * @param opposite_turn - write...
+     *              false for default turn direction,
+     *              true for opposite of default turning direction
+     *              NOTE: The default turning direction will always be the shortest route; if you want to take the long way around for whatever reason, set it to true
+     */
+    public void turnPID_new(double tAngle, double kP, double kI, double kD, double seconds, boolean opposite_turn){
+
+        double power, prevError, error, dT, prevTime, currTime; //DECLARE ALL VARIABLES
+
+        error = tAngle - get180Yaw(); //INITIALIZE THESE VARIABLES
+        currTime = 0.0;
+
+        ElapsedTime t = new ElapsedTime(); //CREATE NEW TIME OBJECT
+        t.reset();
+        while (opModeIsActive() && Math.abs(error) > 0.7 && currTime < seconds){
+            prevError = error;
+            error = tAngle - get180Yaw(); //GET ANGLE REMAINING TO TURN (tANGLE MEANS TARGET ANGLE, AS IN THE ANGLE YOU WANNA GO TO)
+
+            if (!opposite_turn) { // GET SHORTER TURN ANGLE
+                if(error > 180) error = (error-360);
+                else  if(error < -180) error = (error+360);
+            }
+
+            if (Math.abs(error) < 30) minPower = 0.20;
+
+            prevTime = currTime;
+            currTime = t.milliseconds();
+            dT = currTime - prevTime; //GET DIFFERENCE IN CURRENT TIME FROM PREVIOUS TIME
+            power = (error * kP) + ((error) * dT * kI) + ((error - prevError)/dT * kD);
+
+            //A (-) POWER TURNS LEFT AND A (+) TURNS RIGHT
+            setMotorPowers("SIDES",-power, power,0,0);
+            telemetry.addData("tAngle: ", tAngle)
+                    .addData("currAngle: ", get180Yaw())
+                    .addData("kP:", error * kP)
+                    .addData("kI:", error * dT * kI)
+                    .addData("kD:", (error - prevError)/dT * kD)
+                    .addData("power", power)
+                    .addData("error: ", error)
+                    .addData("opposite: ", opposite_turn)
+                    .addData("currTime: ", currTime);
+            motorTelemetry();
+            telemetry.update();
+        }
+        stopMotors();
+        minPower = 0.3;
+    }
+
     //-----MANIPULATOR MECHANISM METHODS-----//
-
-    /**
-     * PURPOSE: Run the intake for a certain amount of time
-     * NOTE: Power is currently set to 0.8 because anything greater launches the wheel over the loading zone
-     * ISSUES: Not an issue, but I'm not sure if I'm supposed to increment the starting speed like I did for the flywheel...
-     * @param milliseconds - enter the number of milliseconds you want intake to run for (1000 milliseconds = 1 second)
-     */
-    public void runIntake(long milliseconds){
-        intake.setPower(-0.8);
-        sleep(milliseconds);
-        intake.setPower(0);
-    }
-
-    /**
-     * PURPOSE: Starts intake motor - that's it
-     */
-    public void startIntake(){
-        intake.setPower(-0.8);
-    }
 
     /**
      * PURPOSE: Set the loader stick to a certain position
@@ -862,43 +903,6 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
             telemetry.update();
             sleep(300);
         }
-    }
-
-    /**
-     * PURPOSE: Complete full launch cycles
-     * ISSUE: Roughly written, might need to tweak timing between intake and loader
-     * @param zone - I just put this as an idea that you could specify the zone you want to shoot in and it will set the speed accordingly
-     * @param numCycles - enter the # of rings you want to launch
-     */
-    public void launchCycle(int zone, int numCycles){
-
-        switch (zone){
-            case 1:
-                startShooter(0.75); // These are placeholders for the actual speed values
-                break;
-            case 2:
-                startShooter(0.75);
-                break;
-            case 3:
-                startShooter(0.75);
-                break;
-            default:
-                telemetry.addData("Error:","Zone not specified correctly");
-                telemetry.update();
-        }
-        startIntake();
-
-        for (int i = 0; i < numCycles; i++){
-            sleep(1000);
-            setLoader(true);
-            telemetry.addData("Shot:", i+1);
-            telemetry.update();
-            setLoader(false);
-            telemetry.addData("Load next", "");
-            telemetry.update();
-        }
-        shooter.setPower(0);
-        intake.setPower(0);
     }
 
     public void setWobbleArm(boolean deployed) {

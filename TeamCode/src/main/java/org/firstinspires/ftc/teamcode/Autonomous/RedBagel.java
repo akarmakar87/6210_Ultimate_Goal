@@ -38,6 +38,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
 
                     driveAdjust(-1, 16, 0, 5000);
 
+                    // use new pid method to combine into single turn command with chosen direction
                     turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
                     turnPID(178, 0.6 / 180, 0.00005, 0.1, 3000);
 
@@ -61,6 +62,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
 
                     strafeAdjust(1, 11, 0, 3000);
 
+                    // use new pid method to combine into single turn command with chosen direction
                     turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
                     turnPID(179, 0.6 / 180, 0.00005, 0.1, 3000);
 
@@ -83,6 +85,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
 
                     driveAdjust(-1, 57, 0, 5000);
 
+                    // use new pid method to combine into single turn command with chosen direction
                     turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
                     turnPID(179, 0.6 / 180, 0.00005, 0.1, 3000);
 
