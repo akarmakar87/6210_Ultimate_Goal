@@ -23,7 +23,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         boolean loaderBool = true;
         boolean incrementTurn = false;
         boolean field = false;
-        boolean manuel = true;
+        boolean manual = true;
 
         int lowestArm = 0;
         double turnAngle = 0;
@@ -189,11 +189,9 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             if(isPressed("2a", gamepad2.a)) loaderBool = !loaderBool;
 
             //Loader Speed Macro
-            if(isPressed("2y", gamepad2.y)) {
+            if(isPressed("2y", gamepad2.y)) { }
 
-            }
-
-            //Depoloyed
+            //Deployed
             if (loaderBool) loader.setPosition(1);
             //Retracted
             else loader.setPosition(0);
@@ -203,9 +201,6 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             //Opened
             setWobbleClaw(wobbleBool);
-
-
-
 
             // Arm
             /*if (isPressed("2b", gamepad2.b)) {
@@ -231,7 +226,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
 
             if(Math.abs(gamepad2.right_stick_y) > 0.05 ){
                 deployArm = false;
-                manuel = true;
+                manual = true;
                 wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 wobbleArm.setPower(gamepad2.right_stick_y*-0.5);
             }
