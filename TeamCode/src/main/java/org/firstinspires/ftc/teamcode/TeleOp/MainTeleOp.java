@@ -39,7 +39,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         int speed = 0;
 
         //sets up imu and inits all motors
-        init(hardwareMap, 0);
+        init(hardwareMap, 1);
 
         int lastEncoder = shooter.getCurrentPosition();
 
@@ -77,9 +77,9 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             // Drive mode toggle
-            /*if (isPressed("1y", gamepad1.y)){
+            if (isPressed("1y", gamepad1.y)){
                 field = !field;
-            }*/
+            }
 
             // Turn increments
             if (isPressed("1dl", gamepad1.dpad_left)){
@@ -171,10 +171,10 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             // Output
 
             if(gamepad2.right_trigger > 0.05){
-                shooterPower = gamepad2.right_trigger * 0.95;
+                shooterPower = gamepad2.right_trigger * 0.8;
             }
             else if(gamepad2.left_trigger > 0.05){
-                shooterPower = -gamepad2.left_trigger * 0.95;
+                shooterPower = -gamepad2.left_trigger * 0.8;
             }
             else{
                 shooterPower = 0;

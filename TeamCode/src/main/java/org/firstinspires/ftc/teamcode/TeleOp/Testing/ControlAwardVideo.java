@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Control Award Video", group = "teleop")
-@Disabled
+//@Disabled
 public class ControlAwardVideo extends UltimateGoalLinearOpMode {
 
     @Override
@@ -29,12 +29,12 @@ public class ControlAwardVideo extends UltimateGoalLinearOpMode {
 
         // SHOW driveAdjust() METHOD AND PUSH THE ROBOT OFF-CENTER TO WATCH IT CORRECT ITSELF
         sleep(2000);
-        driveAdjust(1, 50, 0, 5000);
+        driveAdjust(1, 50, 90, 5000);
         sleep(2000);
 
         // SHOW strafeAdjust() METHOD AND PUSH THE ROBOT OFF-CENTER TO WATCH IT CORRECT ITSELF
         sleep(2000);
-        strafeAdjust(1, 50, 0, 5000);
+        strafeAdjust(1, 50, 90, 5000);
         sleep(2000);
 
         // SHOW HALF SPEED BUTTON BEING PRESSED AND THE ROBOT SLOWING DOWN

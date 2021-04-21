@@ -76,7 +76,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
                     strafeAdjust(1, 12, 0, 3000);
                     driveAdjust(2, 108, -2, 5000);
 
-                    shooter.setPower(.64);  //9
+                    shooter.setPower(.63);  //9
 
                     setWobbleArm(true);
                     setWobbleClaw(false);
@@ -121,7 +121,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
                 intake.setPower(-0.8);
                 turnPID(100, 0.6 / 180, 0.00005, 0.1, 3000);
                 driveAdjust(1, 30, 0, 5000);
-                turnPID(171, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(172, 0.6 / 180, 0.00005, 0.1, 3000);
                 intake.setPower(0);
             }
 
@@ -167,7 +167,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
             //wobbleArm.setTargetPosition(100);
 
             if (pos == 4) {
-                shooter.setPower(.85);
+                shooter.setPower(.70);
                 wobbleArm.setTargetPosition(200);
                 intake.setPower(1);
                 driveAdjust(-1, 41, -30, 5000); //1, 35, 180
