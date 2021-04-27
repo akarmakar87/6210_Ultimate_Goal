@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="TestControlHub", group = "auto") // BLUE SIDE
-//@Disabled
+@Disabled
 
 public class TestControlHub extends UltimateGoalLinearOpMode {
 

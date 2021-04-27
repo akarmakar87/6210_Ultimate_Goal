@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.TeleOp.Testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -39,6 +40,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="MyOpenCV", group = "teleop")
+@Disabled
 public class MyOpenCV extends UltimateGoalLinearOpMode
 {
     OpenCvInternalCamera phoneCam;

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Control Award Video", group = "teleop")
-//@Disabled
+@Disabled
 public class ControlAwardVideo extends UltimateGoalLinearOpMode {
 
     @Override

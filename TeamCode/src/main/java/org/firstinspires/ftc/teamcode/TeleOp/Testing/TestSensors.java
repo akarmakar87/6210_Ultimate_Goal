@@ -11,7 +11,7 @@ import static android.graphics.Color.green;
 import static android.graphics.Color.red;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TestSensors", group = "teleop")
-//@Disabled
+@Disabled
 public class TestSensors extends UltimateGoalLinearOpMode {
 
     @Override

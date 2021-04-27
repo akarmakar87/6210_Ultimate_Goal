@@ -55,7 +55,7 @@ import static org.firstinspires.ftc.teamcode.X_Other.SkystoneLinearOpMode.VUFORI
  * is explained below.
  */
 @TeleOp(name = "TF", group = "Concept")
-//@Disabled
+@Disabled
 public class ConceptTensorFlowObjectDetection extends UltimateGoalLinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";

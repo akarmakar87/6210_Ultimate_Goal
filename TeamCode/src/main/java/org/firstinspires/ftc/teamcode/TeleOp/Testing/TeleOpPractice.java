@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOpPractice", group = "teleop")
-//@Disabled
+@Disabled
 public class TeleOpPractice extends UltimateGoalLinearOpMode {
 
     @Override
