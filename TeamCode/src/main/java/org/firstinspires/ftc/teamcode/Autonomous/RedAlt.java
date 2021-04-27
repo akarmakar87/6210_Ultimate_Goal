@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name="Red Alt", group = "auto") // RED SIDE
-
+@Disabled
 public class RedAlt extends UltimateGoalLinearOpMode {
 
     @Override

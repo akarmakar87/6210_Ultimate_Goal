@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name = "BlueBagel", group = "auto")
-
+@Disabled
 public class BlueBagel extends UltimateGoalLinearOpMode {
 
     @Override
