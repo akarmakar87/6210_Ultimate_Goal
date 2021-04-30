@@ -39,7 +39,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
         int speed = 0;
 
         //sets up imu and inits all motors
-        init(hardwareMap, 1);
+        init(hardwareMap, 0);
 
         int lastEncoder = shooter.getCurrentPosition();
 
@@ -181,7 +181,7 @@ public class MainTeleOp extends UltimateGoalLinearOpMode {
             }
 
             if (gamepad2.dpad_down){
-                shooterPower = 0.625;
+                shooterPower = 0.6;
             }
 
             shooter.setPower(shooterPower);

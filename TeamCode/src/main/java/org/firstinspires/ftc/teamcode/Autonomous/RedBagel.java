@@ -29,7 +29,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
                     strafeAdjust(1, 14, 0, 3000);
                     driveAdjust(0.8, 62, -2, 5000); //66
 
-                    shooter.setPower(0.64);    //.6
+                    shooter.setPower(0.68);    //.6
 
                     setWobbleArm(true);
                     setWobbleClaw(false);
@@ -64,7 +64,7 @@ public class RedBagel extends UltimateGoalLinearOpMode {
 
                     // use new pid method to combine into single turn command with chosen direction
                     turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
-                    turnPID(179, 0.6 / 180, 0.00005, 0.1, 3000);
+                    turnPID(178, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
                     angle1 = -20;
@@ -135,9 +135,9 @@ public class RedBagel extends UltimateGoalLinearOpMode {
             }
 
             setWobbleClaw(true);
-            sleep(300);
+            sleep(800);
             setWobbleArm(false);
-            sleep(300);
+            sleep(400);
 
             turnPID(angle1, 0.6 / 180, 0.00005, 0.1, 3000);
 
