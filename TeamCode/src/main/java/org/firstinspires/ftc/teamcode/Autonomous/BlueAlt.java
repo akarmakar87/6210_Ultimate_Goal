@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
-@Autonomous(name="Red Alt", group = "auto") // RED SIDE
+@Autonomous(name="Blue Alt", group = "auto") // RED SIDE
 //@Disabled
-public class RedAlt extends UltimateGoalLinearOpMode {
+public class BlueAlt extends UltimateGoalLinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,8 +28,9 @@ public class RedAlt extends UltimateGoalLinearOpMode {
         //RETRACT WOBBLE ARM
         //setWobbleArm(false);
 
-        //STRAFE LEFT
-        strafeAdjust(-1, 12, 0, 3000);
+        //STRAFE RIGHT
+
+        strafeAdjust(1, 12, 0, 3000);
         shooter.setPower(.8);
 
         //MOVE FORWARD
@@ -37,7 +38,7 @@ public class RedAlt extends UltimateGoalLinearOpMode {
 
         //TURN TO FIRE AT HIGH GOAL
         turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
-        turnPID(145, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(-174, 0.6 / 180, 0.00005, 0.1, 3000);
 
         //FIRE 3 RINGS INTO HIGH GOAL
         setLoader(true);

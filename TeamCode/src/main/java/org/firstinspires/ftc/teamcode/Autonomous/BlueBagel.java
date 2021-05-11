@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.UltimateGoalLinearOpMode;
 
 @Autonomous(name = "BlueBagel", group = "auto")
-@Disabled
+//@Disabled
 public class BlueBagel extends UltimateGoalLinearOpMode {
 
     @Override
@@ -19,7 +19,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             waitForStart();
 
             int pos = detectStack();
-            //pos = 0;
+            pos = 4;
             int angle1 = 0;
             int dist1 = 0;
 
@@ -27,7 +27,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             switch (pos) {
                 case 0:
 
-                    strafeAdjust(-1, 14, 0, 3000);
+                    strafeAdjust(-1, 14, 0, 2000);
                     driveAdjust(0.8, 62, -2, 5000); //66
 
                     shooter.setPower(0.64);    //.6
@@ -41,21 +41,26 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
 
                     // use new pid method to combine into single turn command with chosen direction
                     turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
-                    turnPID(-178, 0.6 / 180, 0.00005, 0.1, 3000);
+                    turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
-                    angle1 = 168;
-                    dist1 = 28; //31
+                    angle1 = 180;
+                    dist1 = 55;
                     break;
 
                 case 1:
                     strafeAdjust(-1, 2, 0, 3000);
                     driveAdjust(1, 85, 0, 5000);    //87
 
+                    turnPID(-60, 0.6 / 180, 0.00005, 0.1, 3000);
+
                     setWobbleArm(true);
                     setWobbleClaw(false);
+                    wobbleArm.setTargetPosition(250);
 
                     sleep(1000);
+
+                    turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
 
                     shooter.setPower(.62);  //.68
 
@@ -65,17 +70,17 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
 
                     // use new pid method to combine into single turn command with chosen direction
                     turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
-                    turnPID(-179, 0.6 / 180, 0.00005, 0.1, 3000);
+                    turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
-                    angle1 = -20;
+                    angle1 = 0;
                     dist1 = 51;
                     break;
 
                 case 4:
 
                     strafeAdjust(-1, 12, 0, 3000);
-                    driveAdjust(2, 108, -2, 5000);
+                    driveAdjust(1.75, 108, 2, 5000);
 
                     shooter.setPower(.63);  //9
 
@@ -84,13 +89,13 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
 
                     sleep(400);
 
-                    driveAdjust(-1, 57, 0, 5000);
+                    driveAdjust(-1, 57, -2, 5000);
 
                     // use new pid method to combine into single turn command with chosen direction
                     turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
-                    turnPID(-179, 0.6 / 180, 0.00005, 0.1, 3000);
+                    turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
 
-                    angle1 = 160;
+                    angle1 = 170;
                     dist1 = 73;
                     break;
 
@@ -111,28 +116,29 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
 
 
             if (pos == 0) {
-                turnPID(-128, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(-145, 0.6 / 180, 0.00005, 0.1, 3000);
             } else if (pos == 1) {
                 intake.setPower(-1);
                 turnPID(-100, 0.6 / 180, 0.00005, 0.1, 3000);
                 driveAdjust(1, 30, 0, 5000);
-                turnPID(-170, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(-185, 0.6 / 180, 0.00005, 0.1, 3000);
                 intake.setPower(0);
             } else {
                 intake.setPower(-0.8);
-                turnPID(-100, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(-120, 0.6 / 180, 0.00005, 0.1, 3000);
                 driveAdjust(1, 30, 0, 5000);
-                turnPID(-172, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(165, 0.6 / 180, 0.00005, 0.1, 3000);
                 intake.setPower(0);
             }
 
 
             if (pos == 1) {
+                setWobbleArm(true);
                 driveAdjust(1, 12, 0, 5000);
             } else if (pos == 0) {
                 driveAdjust(1, 32, 0, 5000);
             } else {
-                driveAdjust(1, 15, 0, 5000);
+                driveAdjust(1, 10, 0, 5000);
             }
 
             setWobbleClaw(true);
@@ -145,16 +151,16 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             if (pos == 0) {
                 driveAdjust(-1, dist1, 0, 5000);
             } else if (pos == 4) {
-                driveAdjust(-1, dist1, -3, 5000);
+                driveAdjust(-1, dist1, 0, 5000);
             } else {
-                driveAdjust(1, dist1, -17, 5000);
+                driveAdjust(1, dist1, 0, 5000);
             }
 
             if (pos == 0) {
                 turnPID(-110, 0.6 / 180, 0.00005, 0.1, 3000);
                 turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
             } else if (pos == 4) {
-                turnPID(35, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(10, 0.6 / 180, 0.00005, 0.1, 3000);
             }
 
             setWobbleArm(true);
@@ -172,7 +178,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                 wobbleArm.setTargetPosition(200);
                 intake.setPower(1);
                 driveAdjust(-1, 41, -30, 5000); //1, 35, 180
-                turnPID(-160, 0.6 / 180, 0.00005, 0.1, 3000);    //160
+                turnPID(168, 0.6 / 180, 0.00005, 0.1, 3000);    //160
                 intake.setPower(0);
                 setLoader(true);
                 setLoader(false);
@@ -182,18 +188,16 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                 shooter.setPower(0);
             } else if (pos == 1) {
                 shooter.setPower(.575);
-                sleep(250);
-                driveAdjust(-1, 16, 180, 5000);
-                turnPID(-182, 0.6 / 180, 0.00005, 0.1, 3000);
-                sleep(300);
+                driveAdjust(-1, 16, 0, 5000);
+                turnPID(130, 0.6 / 180, 0.00005, 0.1, 3000);
                 setLoader(true);
                 setLoader(false);
                 shooter.setPower(0);
                 driveAdjust(-1, 12, 180, 5000);
             } else if (pos == 0) {
                 driveAdjust(-1, 5, -90, 5000);
-                turnPID(-5, 0.6 / 180, 0.00005, 0.1, 3000);
-                driveAdjust(1, 12, 0, 5000);
+                turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
+                //driveAdjust(1, 12, 0, 5000);
             }
 
         }
