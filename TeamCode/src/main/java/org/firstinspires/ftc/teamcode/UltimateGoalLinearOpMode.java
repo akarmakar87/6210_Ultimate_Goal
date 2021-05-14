@@ -905,6 +905,10 @@ public class UltimateGoalLinearOpMode extends LinearOpMode {
         }
     }
 
+    public void ShooterSpeed(double max){
+
+    }
+
     public void setWobbleArm(boolean deployed) {
         wobbleArm.setPower(1);
         wobbleArm.setTargetPosition(wobbleArm.getCurrentPosition());

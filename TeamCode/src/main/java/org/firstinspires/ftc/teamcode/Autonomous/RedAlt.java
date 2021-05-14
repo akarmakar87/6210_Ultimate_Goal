@@ -30,7 +30,7 @@ public class RedAlt extends UltimateGoalLinearOpMode {
 
         //STRAFE LEFT
         strafeAdjust(-1, 12, 0, 3000);
-        shooter.setPower(.8);
+        shooter.setPower(.78);
 
         //MOVE FORWARD
         driveAdjust(1, 50, 0, 5000);
@@ -51,9 +51,15 @@ public class RedAlt extends UltimateGoalLinearOpMode {
         setLoader(true);
         setLoader(false);
 
+        shooter.setPower(0);
+
         //DRIVE TO PARKING SPOT (BACKWARDS)
         turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
-        driveAdjust(1, 15, 0, 5000);
+        driveAdjust(1, 20, 0, 5000);
+
+        //EVIL CODE (COMMENT OUT IF YOU WANT TO BE NICE)
+        //turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
+        //driveAdjust(1, 50, 90, 5000);
 
         telemetry.addData("auto:", "complete");
         telemetry.update();

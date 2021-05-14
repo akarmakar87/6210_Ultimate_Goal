@@ -19,7 +19,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             waitForStart();
 
             int pos = detectStack();
-            pos = 4;
+            pos = 1;
             int angle1 = 0;
             int dist1 = 0;
 
@@ -40,11 +40,12 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                     driveAdjust(-1, 12, 0, 5000);   //16
 
                     // use new pid method to combine into single turn command with chosen direction
+                    //turnPID_new(152, 0.6 / 180, 0.00005, 0.1, 3000, true);
                     turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
                     turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
-                    angle1 = 180;
+                    angle1 = 175;
                     dist1 = 55;
                     break;
 
@@ -80,20 +81,20 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                 case 4:
 
                     strafeAdjust(-1, 12, 0, 3000);
-                    driveAdjust(1.75, 108, 2, 5000);
+                    driveAdjust(1, 108, 2, 3000);
 
-                    shooter.setPower(.63);  //9
+                    shooter.setPower(.61);  //9
 
                     setWobbleArm(true);
                     setWobbleClaw(false);
 
                     sleep(400);
 
-                    driveAdjust(-1, 57, -2, 5000);
+                    driveAdjust(-1, 57, 0, 5000);
 
                     // use new pid method to combine into single turn command with chosen direction
                     turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
-                    turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
+                    turnPID(150, 0.6 / 180, 0.00005, 0.1, 3000);
 
                     angle1 = 170;
                     dist1 = 73;
@@ -125,7 +126,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                 intake.setPower(0);
             } else {
                 intake.setPower(-0.8);
-                turnPID(-120, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(-100, 0.6 / 180, 0.00005, 0.1, 3000);
                 driveAdjust(1, 30, 0, 5000);
                 turnPID(165, 0.6 / 180, 0.00005, 0.1, 3000);
                 intake.setPower(0);
@@ -134,11 +135,11 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
 
             if (pos == 1) {
                 setWobbleArm(true);
-                driveAdjust(1, 12, 0, 5000);
+                driveAdjust(1, 12, -145, 5000);
             } else if (pos == 0) {
-                driveAdjust(1, 32, 0, 5000);
+                driveAdjust(1, 32, -185, 5000);
             } else {
-                driveAdjust(1, 10, 0, 5000);
+                driveAdjust(1, 10, 165, 5000);
             }
 
             setWobbleClaw(true);
@@ -149,7 +150,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             turnPID(-angle1, 0.6 / 180, 0.00005, 0.1, 3000);
 
             if (pos == 0) {
-                driveAdjust(-1, dist1, 0, 5000);
+                driveAdjust(-1, dist1, -angle1, 5000);
             } else if (pos == 4) {
                 driveAdjust(-1, dist1, 0, 5000);
             } else {
@@ -157,10 +158,10 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             }
 
             if (pos == 0) {
-                turnPID(-110, 0.6 / 180, 0.00005, 0.1, 3000);
+                //turnPID(-110, 0.6 / 180, 0.00005, 0.1, 3000);
                 turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
             } else if (pos == 4) {
-                turnPID(10, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(20, 0.6 / 180, 0.00005, 0.1, 3000);
             }
 
             setWobbleArm(true);
@@ -189,7 +190,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             } else if (pos == 1) {
                 shooter.setPower(.575);
                 driveAdjust(-1, 16, 0, 5000);
-                turnPID(130, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(170, 0.6 / 180, 0.00005, 0.1, 3000);
                 setLoader(true);
                 setLoader(false);
                 shooter.setPower(0);
