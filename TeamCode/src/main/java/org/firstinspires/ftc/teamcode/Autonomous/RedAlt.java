@@ -29,24 +29,28 @@ public class RedAlt extends UltimateGoalLinearOpMode {
         //setWobbleArm(false);
 
         //STRAFE LEFT
-        strafeAdjust(-1, 12, 0, 3000);
-        shooter.setPower(.78);
+        strafeAdjust(-1, 10, 0, 3000);
+        shooter.setPower(.58);
 
         //MOVE FORWARD
         driveAdjust(1, 50, 0, 5000);
 
         //TURN TO FIRE AT HIGH GOAL
-        turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
-        turnPID(145, 0.6 / 180, 0.00005, 0.1, 3000);
+        //turnPID(90, 0.6 / 180, 0.00005, 0.1, 3000);
+        //turnPID(145, 0.6 / 180, 0.00005, 0.1, 3000);
+
+        turnPID(160, 0.6 / 180, 0.00005, 0.1, 3000);
 
         //FIRE 3 RINGS INTO HIGH GOAL
         setLoader(true);
         setLoader(false);
 
+        turnPID(165, 0.6 / 180, 0.00005, 0.1, 3000);
 
         setLoader(true);
         setLoader(false);
 
+        turnPID(170, 0.6 / 180, 0.00005, 0.1, 3000);
 
         setLoader(true);
         setLoader(false);

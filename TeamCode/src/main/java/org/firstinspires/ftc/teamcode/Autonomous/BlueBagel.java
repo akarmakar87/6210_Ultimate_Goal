@@ -19,7 +19,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
             waitForStart();
 
             int pos = detectStack();
-            pos = 1;
+            //pos = 1;
             int angle1 = 0;
             int dist1 = 0;
 
