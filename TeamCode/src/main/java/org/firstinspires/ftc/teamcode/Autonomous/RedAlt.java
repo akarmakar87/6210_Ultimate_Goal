@@ -50,7 +50,7 @@ public class RedAlt extends UltimateGoalLinearOpMode {
         setLoader(true);
         setLoader(false);
 
-        turnPID(170, 0.6 / 180, 0.00005, 0.1, 3000);
+        turnPID(168, 0.6 / 180, 0.00005, 0.1, 3000);
 
         setLoader(true);
         setLoader(false);
