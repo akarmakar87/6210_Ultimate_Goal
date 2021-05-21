@@ -11,7 +11,7 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
     @Override
     public void runOpMode() {
 
-        init(hardwareMap, 1);
+        init(hardwareMap, -1);
 
         initOpenCV();
 
@@ -26,7 +26,7 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
         switch (pos) {
             case 0:
 
-                strafeAdjust(1, 14, 0, 3000);
+                strafeAdjust(-1, 14, 0, 3000);
                 driveAdjust(0.8, 55, -2, 5000); //66
 
                 shooter.setPower(0.75);    //.6
@@ -40,7 +40,7 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
 
                 // use new pid method to combine into single turn command with chosen direction
                 turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
-                turnPID(-178, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
                 angle1 = -168;
@@ -48,23 +48,28 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
                 break;
 
             case 1:
-                strafeAdjust(1, 2, 0, 3000);
+                strafeAdjust(-1, 2, 0, 3000);
                 driveAdjust(1, 85, 0, 5000);    //87
+
+                turnPID(-60, 0.6 / 180, 0.00005, 0.1, 3000);
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
+                wobbleArm.setTargetPosition(250);
 
                 sleep(1000);
 
-                shooter.setPower(.7);  //.68
+                turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
+
+                shooter.setPower(.75);  //.68
 
                 driveAdjust(-1, 31, 0, 5000);   //35
 
-                strafeAdjust(1, 11, 0, 3000);
+                strafeAdjust(-1, 11, 0, 2000);
 
                 // use new pid method to combine into single turn command with chosen direction
                 turnPID(-90, 0.6 / 180, 0.00005, 0.1, 3000);
-                turnPID(-178, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
 
 
                 angle1 = 20;
@@ -73,26 +78,24 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
 
             case 4:
 
-                strafeAdjust(1, 12, 0, 3000);
-                driveAdjust(2, 98, -2, 5000);
+                strafeAdjust(-1, 12, 0, 3000);
+                driveAdjust(2, 98, 2, 5000);
 
-                turnPID(45, 0.6 / 180, 0.00005, 0.1, 3000);
-
-
+                //turnPID(45, 0.6 / 180, 0.00005, 0.1, 3000);
 
                 setWobbleArm(true);
                 setWobbleClaw(false);
 
                 sleep(400);
 
-                turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
+                //turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
 
                 driveAdjust(-1, 47, 0, 5000);
 
                 // use new pid method to combine into single turn command with chosen direction
                 turnPID(-90, 1 / 180, 0.00005, 0.1, 1000);
                 shooter.setPower(.75);  //9
-                turnPID(-150, 0.6 / 180, 0.00005, 0.1, 3000);
+                turnPID(150, 0.6 / 180, 0.00005, 0.1, 3000);
 
                 angle1 = -160;
                 dist1 = 73;
@@ -120,17 +123,17 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
             setWobbleArm(false);
             sleep(9000);
             turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
-            strafeAdjust(-1, 17, 0, 3000);
+            strafeAdjust(1, 20, 0, 3000);
             driveAdjust(1, 35, 0, 5000);
 
         } else if (pos == 1) {
             intake.setPower(-1);
-            turnPID(100, 0.6 / 180, 0.00005, 0.1, 3000);
+            turnPID(-100, 0.6 / 180, 0.00005, 0.1, 3000);
             driveAdjust(1, 30, 100, 5000);
             driveAdjust(-1, 30, 100, 5000);
             intake.setPower(0);
             shooter.setPower(.7);
-            turnPID(-195, 0.6 / 180, 0.00005, 0.1, 3000);
+            turnPID(152, 0.6 / 180, 0.00005, 0.1, 3000);
             setLoader(true);
             setLoader(false);
             shooter.setPower(0);
@@ -144,7 +147,7 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
             turnPID(-110, 0.6 / 180, 0.00005, 0.1, 3000);
             driveAdjust(0.5, 25, 110, 5000);
             shooter.setPower(.8);
-            turnPID(-185, 0.6 / 180, 0.00005, 0.1, 3000);
+            turnPID(170, 0.6 / 180, 0.00005, 0.1, 3000);
             setLoader(true);
             setLoader(false);
             setLoader(true);
@@ -154,7 +157,7 @@ public class BlueBagel1Wobble extends UltimateGoalLinearOpMode {
             driveAdjust(0.5, 10, 110, 5000);
             driveAdjust(-0.5, 10, 110, 5000);
             shooter.setPower(.8);
-            turnPID(-185, 0.6 / 180, 0.00005, 0.1, 3000);
+            turnPID(170, 0.6 / 180, 0.00005, 0.1, 3000);
             setLoader(true);
             setLoader(false);
             setLoader(true);

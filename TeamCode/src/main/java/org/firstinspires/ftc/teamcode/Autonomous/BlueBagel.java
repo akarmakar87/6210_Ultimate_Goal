@@ -30,7 +30,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                     strafeAdjust(-1, 14, 0, 2000);
                     driveAdjust(0.8, 62, -2, 5000); //66
 
-                    shooter.setPower(0.64);    //.6
+                    shooter.setPower(0.75);    //.6
 
                     setWobbleArm(true);
                     setWobbleClaw(false);
@@ -63,7 +63,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
 
                     turnPID(0, 0.6 / 180, 0.00005, 0.1, 3000);
 
-                    shooter.setPower(.62);  //.68
+                    shooter.setPower(.75);  //.68
 
                     driveAdjust(-1, 31, 0, 5000);   //35
 
@@ -83,7 +83,7 @@ public class BlueBagel extends UltimateGoalLinearOpMode {
                     strafeAdjust(-1, 12, 0, 3000);
                     driveAdjust(1, 108, 2, 3000);
 
-                    shooter.setPower(.61);  //9
+                    shooter.setPower(.75);  //9
 
                     setWobbleArm(true);
                     setWobbleClaw(false);
